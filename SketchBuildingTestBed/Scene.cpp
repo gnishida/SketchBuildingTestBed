@@ -462,11 +462,9 @@ void Scene::generateGeometry(RenderManager* renderManager, const std::string& st
 	}
 
 	// add a ground plane
-	/*
 	std::vector<Vertex> vertices;
 	glutils::drawGrid(50, 50, 2.5, glm::vec4(0, 0, 1, 1), glm::vec4(1, 1, 1, 1), system.modelMat, vertices);
 	renderManager->addObject("grid", "", vertices);
-	*/
 }
 
 /**
@@ -486,11 +484,9 @@ void Scene::updateGeometry(RenderManager* renderManager, const std::string& stag
 	}
 
 	// add a ground plane
-	/*
 	std::vector<Vertex> vertices;
 	glutils::drawGrid(50, 50, 2.5, glm::vec4(0, 0, 1, 1), glm::vec4(1, 1, 1, 1), system.modelMat, vertices);
 	renderManager->addObject("grid", "", vertices);
-	*/
 }
 
 void Scene::saveGeometry(const std::string& filename) {
