@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<grammar type="facade" version="1.0" author="Gen Nishida">
+	<attr name="floor_height" value="3" range="0.5,10"/>
+	<attr name="ledge_height" value="0.1" range="0.01,2"/>
+	
+	<rule name="Start">
+		<setupProjection axesSelector="scope.xy">
+			<param name="texWidth" type="absolute" value="5"/>
+			<param name="texHeight" type="absolute" value="5"/>
+		</setupProjection>
+		<split splitAxis="y">
+			<param type="absolute" value="floor_height" name="Floor"/>
+			<param type="absolute" value="ledge_height+floor_height" name="LedgeAndFloor" repeat="true"/>
+		</split>
+	</rule>
+	<rule name="LedgeAndFloor">
+		<split splitAxis="y">
+			<param type="absolute" value="z_floor_border_size" name="Border"/>
+			<param type="floating" value="ledge_height" name="Ledge"/>
+			<param type="absolute" value="z_floor_border_size" name="Border"/>
+			<param type="floating" value="floor_height" name="Floor"/>
+		</split>
+	</rule>
+</grammar>
+

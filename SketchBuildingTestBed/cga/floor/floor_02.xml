@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<grammar type="floor" version="1.0" author="Gen Nishida">
+	<attr name="floor_bottom_margin1" value="0.5" range="0.01,3"/>
+	<attr name="floor_bottom_margin2" value="0.5" range="0.01,3"/>
+	<attr name="floor_horizontal_margin" value="1" range="0.01,5"/>
+	<attr name="floor_padding" value="1" range="0.01,5"/>
+	<attr name="floor_top_margin1" value="0.5" range="0.01,3"/>
+	<attr name="floor_top_margin2" value="0.5" range="0.01,3"/>
+	<attr name="floor_window_width1" value="1" range="0.1,10"/>
+	<attr name="floor_window_width2" value="1" range="0.1,10"/>
+	<attr name="z_window_border_size" value="0.03" range="0,0.03"/>
+	
+	<rule name="Start">
+		<split splitAxis="x">
+			<param type="absolute" value="floor_horizontal_margin" name="Wall"/>
+			<param type="absolute" value="floor_window_width1+floor_window_width2+floor_padding*4" name="FloorColumn_02" repeat="true"/>
+			<param type="absolute" value="floor_horizontal_margin" name="Wall"/>
+		</split>
+	</rule>
+	<rule name="FloorColumn_02">
+		<split splitAxis="x">
+			<param type="floating" value="floor_padding" name="Wall"/>
+			<param type="floating" value="floor_window_width1" name="FloorColumn2_02"/>
+			<param type="floating" value="floor_padding*2" name="Wall"/>
+			<param type="floating" value="floor_window_width2" name="FloorColumn3_02"/>
+			<param type="floating" value="floor_padding" name="Wall"/>
+		</split>
+	</rule>
+	<rule name="FloorColumn2_02">
+		<split splitAxis="y">
+			<param type="floating" value="floor_bottom_margin1" name="Wall"/>
+			<param type="floating" value="floor_window_width1" name="BorderAndWindow_02"/>
+			<param type="floating" value="floor_top_margin1" name="Wall"/>
+		</split>
+	</rule>
+	<rule name="FloorColumn3_02">
+		<split splitAxis="y">
+			<param type="floating" value="floor_bottom_margin2" name="Wall"/>
+			<param type="floating" value="floor_window_width2" name="BorderAndWindow2_02"/>
+			<param type="floating" value="floor_top_margin2" name="Wall"/>
+		</split>
+	</rule>
+	<rule name="BorderAndWindow_02">
+		<offset offsetDistance="-0.08" inside="Window_02" border="Border"/>
+	</rule>
+	<rule name="BorderAndWindow2_02">
+		<offset offsetDistance="-z_window_border_size" inside="Window2_02" border="Border"/>
+	</rule>
+</grammar>
+

@@ -1,0 +1,112 @@
+#pragma once
+
+#include <glew.h>
+#include "Shader.h"
+#include "Vertex.h"
+#include <QGLWidget>
+#include <QMouseEvent>
+#include <QKeyEvent>
+#include <vector>
+#include <QImage>
+#include "Camera.h"
+#include "ShadowMapping.h"
+#include "RenderManager.h"
+#include "CGA.h"
+#include <opencv2/core/core.hpp>
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
+#include "Scene.h"
+#include <QTimer>
+#include "InterpolationCamera.h"
+
+using namespace std;
+class Classifier;
+class MainWindow;
+//class Regression;
+
+class GLWidget3D : public QGLWidget {
+public:
+	static enum { STAGE_BUILDING = 0, STAGE_ROOF, STAGE_FACADE, STAGE_WINDOW, STAGE_LEDGE };
+	static enum { MODE_SKETCH = 0, MODE_SELECT, MODE_SELECT_BUILDING, MODE_COPY, MODE_ERASER, MODE_CAMERA };
+	
+	const int BOTTOM_AREA_HEIGHT = 40;
+	const float CAMERA_DEFAULT_HEIGHT = 5.0f;
+	const float CAMERA_DEFAULT_DEPTH = 80.0f;
+
+	MainWindow* mainWin;
+	QImage sketch;
+	std::vector<std::vector<glm::vec2> > strokes;
+	QPoint lastPos;
+	bool dragging;
+	bool ctrlPressed;
+		
+	std::string stage;
+	std::string preStage;
+	int mode;
+	int demo_mode;
+	//std::vector<Regression*> regressions;
+	std::map<std::string, std::vector<QImage> > grammarImages;
+	std::map<std::string, std::vector<cga::Grammar> > grammars;
+	sc::Scene scene;
+	float current_z;
+
+	Camera camera;
+	glm::vec3 light_dir;
+	glm::mat4 light_mvpMatrix;
+	RenderManager renderManager;	
+
+	InterpolationCamera intCamera;
+	QTimer* camera_timer;
+
+	std::vector<std::vector<glm::vec2> > style_polylines;
+
+public:
+	GLWidget3D(QWidget *parent);
+	void drawLineTo(const QPoint &endPoint);
+	void clearSketch();
+	void clearGeometry();
+	void drawScene(int drawMode);
+	void loadCGA(char* filename);
+	void generateGeometry();
+	void updateGeometry();
+	void selectOption(int option_index);
+
+	void updateBuildingOptions();
+	void updateRoofOptions();
+	void updateFacadeOptions();
+	void updateFloorOptions();
+	void updateWindowOptions();
+	void updateLedgeOptions();
+
+	void predictBuilding(int grammar_id);
+	void predictRoof(int grammar_id);
+	void predictFacade(int grammar_id, const std::vector<float>& params);
+	void predictFloor(int grammar_id, const std::vector<float>& params);
+	void predictWindow(int grammar_id);
+	void predictLedge(int grammar_id);
+
+	bool selectFace(const glm::vec2& mouse_pos);
+	bool selectBuilding(const glm::vec2& mouse_pos);
+	bool selectBuildingControlPoint(const glm::vec2& mouse_pos);
+	void addBuildingMass();
+	glm::vec3 viewVector(const glm::vec2& point, const glm::mat4& mvMatrix, float focalLength, float aspect);
+	void changeStage(const std::string& stage);
+	void changeMode(int new_mode);
+	glm::vec3 computeDownwardedCameraPos(float downward, float distToCamera, float camera_xrot);
+	void camera_update();
+
+	void EDLine(const cv::Mat& source, cv::Mat& result, bool grayscale);
+	void draw2DPolyline(cv::Mat& img, const glm::vec2& p0, const glm::vec2& p1, int polyline_index);
+
+	void keyPressEvent(QKeyEvent* e);
+	void keyReleaseEvent(QKeyEvent* e);
+
+protected:
+	void mousePressEvent(QMouseEvent *e);
+	void mouseMoveEvent(QMouseEvent *e);
+	void mouseReleaseEvent(QMouseEvent *e);
+	void initializeGL();
+	void resizeGL(int width, int height);
+	void paintEvent(QPaintEvent *event);
+};
+
