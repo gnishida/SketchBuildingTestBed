@@ -17,13 +17,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 	ui.actionViewShadow->setChecked(true);
 	ui.actionViewBasicRendering->setChecked(true);
 
-	/*
-	QActionGroup* shapeGroup = new QActionGroup(this);
-	shapeGroup->addAction(ui.actionCuboid);
-	shapeGroup->addAction(ui.actionLShape);
-	ui.actionCuboid->setChecked(true);
-	*/
-
 	// add menu handlers
 	connect(ui.actionNew, SIGNAL(triggered()), this, SLOT(onNew()));
 	connect(ui.actionClearSketch, SIGNAL(triggered()), this, SLOT(onClearSketch()));
