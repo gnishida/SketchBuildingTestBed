@@ -1109,8 +1109,6 @@ void GLWidget3D::resizeGL(int width, int height) {
 
 	QImage newImage(width, height, QImage::Format_RGB888);
 	newImage.fill(qRgba(255, 255, 255, 255));
-	//QPainter painter(&newImage);
-	//painter.drawImage(0, 0, sketch);
 	sketch = newImage;
 }
 
