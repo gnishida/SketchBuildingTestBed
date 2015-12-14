@@ -444,18 +444,36 @@
     <ClInclude Include="HemisphereOperator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="EDLinesLib.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\shaders\fragment.glsl">
+    <None Include="..\shaders\lc_frag_blur.glsl">
       <Filter>Source Files\shader</Filter>
     </None>
-    <None Include="..\shaders\geometry.glsl">
+    <None Include="..\shaders\lc_frag_line.glsl">
       <Filter>Source Files\shader</Filter>
     </None>
-    <None Include="..\shaders\vertex.glsl">
+    <None Include="..\shaders\lc_frag_pass1.glsl">
+      <Filter>Source Files\shader</Filter>
+    </None>
+    <None Include="..\shaders\lc_frag_shadow.glsl">
+      <Filter>Source Files\shader</Filter>
+    </None>
+    <None Include="..\shaders\lc_frag_ssao.glsl">
+      <Filter>Source Files\shader</Filter>
+    </None>
+    <None Include="..\shaders\lc_vert_blur.glsl">
+      <Filter>Source Files\shader</Filter>
+    </None>
+    <None Include="..\shaders\lc_vert_line.glsl">
+      <Filter>Source Files\shader</Filter>
+    </None>
+    <None Include="..\shaders\lc_vert_pass1.glsl">
+      <Filter>Source Files\shader</Filter>
+    </None>
+    <None Include="..\shaders\lc_vert_shadow.glsl">
+      <Filter>Source Files\shader</Filter>
+    </None>
+    <None Include="..\shaders\lc_vert_ssao.glsl">
       <Filter>Source Files\shader</Filter>
     </None>
   </ItemGroup>

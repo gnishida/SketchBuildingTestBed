@@ -65,7 +65,7 @@ public:
 	void drawLineTo(const QPoint &endPoint);
 	void clearSketch();
 	void clearGeometry();
-	void drawScene(int drawMode);
+	void drawScene();
 	void loadCGA(char* filename);
 	void generateGeometry();
 	void updateGeometry();
@@ -94,9 +94,6 @@ public:
 	void changeMode(int new_mode);
 	glm::vec3 computeDownwardedCameraPos(float downward, float distToCamera, float camera_xrot);
 	void camera_update();
-
-	void EDLine(const cv::Mat& source, cv::Mat& result, bool grayscale);
-	void draw2DPolyline(cv::Mat& img, const glm::vec2& p0, const glm::vec2& p1, int polyline_index);
 
 	void keyPressEvent(QKeyEvent* e);
 	void keyReleaseEvent(QKeyEvent* e);

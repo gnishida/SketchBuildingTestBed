@@ -133,7 +133,7 @@
       <DataExecutionPrevention />
       <TargetMachine>MachineX64</TargetMachine>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(BOOST_LIBRARYDIR);../opencv/lib;../glew;$(CGAL_DIR)\lib;$(CGAL_DIR)\auxiliary\gmp\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>qtmaind.lib;Qt5Cored.lib;Qt5Guid.lib;Qt5OpenGLd.lib;opengl32.lib;glu32.lib;Qt5Widgetsd.lib;Qt5Xmld.lib;glew32.lib;opencv_world300d.lib;libboost_thread-vc120-mt-gd-1_58.lib;CGAL-vc120-mt-gd-4.7.lib;CGAL_Core-vc120-mt-gd-4.7.lib;CGAL_ImageIO-vc120-mt-gd-4.7.lib;CGAL_Qt5-vc120-mt-gd-4.7.lib;libgmp-10.lib;libmpfr-4.lib;EDLinesLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>qtmaind.lib;Qt5Cored.lib;Qt5Guid.lib;Qt5OpenGLd.lib;opengl32.lib;glu32.lib;Qt5Widgetsd.lib;Qt5Xmld.lib;glew32.lib;opencv_world300d.lib;libboost_thread-vc120-mt-gd-1_58.lib;CGAL-vc120-mt-gd-4.7.lib;CGAL_Core-vc120-mt-gd-4.7.lib;CGAL_ImageIO-vc120-mt-gd-4.7.lib;CGAL_Qt5-vc120-mt-gd-4.7.lib;libgmp-10.lib;libmpfr-4.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <CudaCompile>
       <CodeGeneration>compute_20,sm_20</CodeGeneration>
@@ -185,7 +185,7 @@
       <DataExecutionPrevention />
       <TargetMachine>MachineX64</TargetMachine>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(BOOST_LIBRARYDIR);../opencv/lib;../glew;$(CGAL_DIR)\lib;$(CGAL_DIR)\auxiliary\gmp\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>qtmain.lib;Qt5Core.lib;Qt5Gui.lib;Qt5OpenGL.lib;opengl32.lib;glu32.lib;Qt5Widgets.lib;Qt5Xml.lib;glew32.lib;opencv_world300.lib;libboost_thread-vc120-mt-1_58.lib;CGAL-vc120-mt-4.7.lib;CGAL_Core-vc120-mt-4.7.lib;CGAL_ImageIO-vc120-mt-4.7.lib;CGAL_Qt5-vc120-mt-4.7.lib;libgmp-10.lib;libmpfr-4.lib;EDLinesLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>qtmain.lib;Qt5Core.lib;Qt5Gui.lib;Qt5OpenGL.lib;opengl32.lib;glu32.lib;Qt5Widgets.lib;Qt5Xml.lib;glew32.lib;opencv_world300.lib;libboost_thread-vc120-mt-1_58.lib;CGAL-vc120-mt-4.7.lib;CGAL_Core-vc120-mt-4.7.lib;CGAL_ImageIO-vc120-mt-4.7.lib;CGAL_Qt5-vc120-mt-4.7.lib;libgmp-10.lib;libmpfr-4.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>
       </ModuleDefinitionFile>
     </Link>
@@ -372,7 +372,6 @@
     </CustomBuild>
     <ClInclude Include="Cylinder.h" />
     <ClInclude Include="CylinderSide.h" />
-    <ClInclude Include="EDLinesLib.h" />
     <ClInclude Include="FaceSelector.h" />
     <ClInclude Include="GableRoof.h" />
     <ClInclude Include="GeneralObject.h" />
@@ -428,9 +427,16 @@
     <ClInclude Include="GeneratedFiles\ui_MainWindow.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\shaders\fragment.glsl" />
-    <None Include="..\shaders\geometry.glsl" />
-    <None Include="..\shaders\vertex.glsl" />
+    <None Include="..\shaders\lc_frag_blur.glsl" />
+    <None Include="..\shaders\lc_frag_line.glsl" />
+    <None Include="..\shaders\lc_frag_pass1.glsl" />
+    <None Include="..\shaders\lc_frag_shadow.glsl" />
+    <None Include="..\shaders\lc_frag_ssao.glsl" />
+    <None Include="..\shaders\lc_vert_blur.glsl" />
+    <None Include="..\shaders\lc_vert_line.glsl" />
+    <None Include="..\shaders\lc_vert_pass1.glsl" />
+    <None Include="..\shaders\lc_vert_shadow.glsl" />
+    <None Include="..\shaders\lc_vert_ssao.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

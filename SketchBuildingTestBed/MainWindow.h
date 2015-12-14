@@ -30,8 +30,9 @@ public slots:
 	void onClearSketch();
 	void onOpenCGA();
 	void onSaveGeometry();
-	void onSketchyRendering();
 	void onAddBuildingMass();
+	void onViewShadow();
+	void onViewRendering();
 	void onStageChanged();
 	void onModeChanged();
 	void addListItem(const QString& text, const QImage& image, int option_index);
