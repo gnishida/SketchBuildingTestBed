@@ -31,6 +31,7 @@ public:
 	void setGrammar(const std::string& name, const cga::Grammar& grammar);
 	void setGrammar(const std::string& name, const cga::Grammar& grammar, const std::vector<float>& params, bool normalized);
 	void setDefaultGrammar(const std::string& name, const cga::Grammar& grammar);
+	void loadMaterial(const std::string& filename);
 
 	void generateGeometry(cga::CGA* system, RenderManager* renderManager, const std::string& stage);
 	void updateGeometry(RenderManager* renderManager, const std::string& stage);

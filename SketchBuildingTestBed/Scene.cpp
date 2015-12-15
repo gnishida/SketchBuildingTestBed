@@ -13,7 +13,9 @@ SceneObject::SceneObject() : offset_x(0), offset_y(0), object_width(0), object_d
 		cga::parseGrammar("cga/default_border.xml", grammars["Border"]);
 		//cga::parseGrammar("cga/default_ledge.xml", grammars["Ledge"]);
 
-		// load default grammars
+		// load material grammars
+		loadMaterial("cga/paris.xml");
+		/*
 		cga::parseGrammar("cga/default_wall.xml", default_grammars["Wall"]);
 		cga::parseGrammar("cga/default_roof_ledge.xml", default_grammars["RoofLedge"]);
 		cga::parseGrammar("cga/default_roof_top.xml", default_grammars["RoofTop"]);
@@ -22,6 +24,7 @@ SceneObject::SceneObject() : offset_x(0), offset_y(0), object_width(0), object_d
 		cga::parseGrammar("cga/default_window_frame.xml", default_grammars["WindowFrame"]);
 		cga::parseGrammar("cga/default_window_glass.xml", default_grammars["WindowGlass"]);
 		cga::parseGrammar("cga/default_window_shutter_frame.xml", default_grammars["WindowShutterFrame"]);
+		*/
 
 		cga::Grammar defaultRoofGrammar;
 		cga::parseGrammar("cga/roof/roof_01.xml", defaultRoofGrammar);
@@ -104,6 +107,11 @@ void SceneObject::setDefaultGrammar(const std::string& name, const cga::Grammar&
 		}
 	}
 }
+
+void SceneObject::loadMaterial(const std::string& filename) {
+	cga::parseGrammar(filename.c_str(), default_grammars["Material"]);
+}
+
 
 void SceneObject::generateGeometry(cga::CGA* system, RenderManager* renderManager, const std::string& stage) {
 	faces.clear();
