@@ -15,57 +15,40 @@
 		</setupProjection>
 		<texture texturePath="textures/roof.jpg"/>
 	</rule>
+	<rule name="RoofSide">
+		<color s="#404040"/>
+	</rule>
 	<rule name="RoofSide_05">
-		<setupProjection axesSelector="scope.xy">
-			<param name="texWidth" type="absolute" value="1"/>
-			<param name="texHeight" type="absolute" value="1"/>
-		</setupProjection>
-		<texture texturePath="textures/roof_paris.png"/>
+		<color s="#404040"/>
 	</rule>
 	<rule name="RoofLedge">
-		<color s="#e5d2ba"/>
+		<color s="#404040"/>
 	</rule>
 	<rule name="RoofLedge_05">
-		<color s="#e5d2ba"/>
+		<color s="#404040"/>
 	</rule>
 	
 	<!-- wall -->
 	<rule name="Wall">
-		<texture texturePath="textures/wall_paris.png"/>
-	</rule>
-	<rule name="Wall_04">
-		<texture texturePath="textures/wall_paris.png"/>
-	</rule>
-	<rule name="Wall_05">
-		<texture texturePath="textures/wall_paris.png"/>
+		<color s="#202020"/>
 	</rule>
 	
 	<!-- ledge -->
 	<rule name="LedgeFace">
-		<color s="#e5d2ba"/>
+		<color s="#a0a0a0"/>
 	</rule>
 	<rule name="LedgeFace_03">
-		<color s="#e5d2ba"/>
+		<color s="#a0a0a0"/>
 	</rule>
 	
 	<!-- window -->
 	<rule name="WindowFrame">
-		<color s="#e5d2ba"/>
-	</rule>
-	<rule name="WindowFrame_06">
-		<color s="#e5d2ba"/>
+		<color s="#606060"/>
 	</rule>
 	<rule name="WindowSill">
-		<color s="#e5d2ba"/>
+		<color s="#808080"/>
 	</rule>
 	<rule name="WindowGlass">
-		<setupProjection axesSelector="scope.xy">
-			<param name="texWidth" type="relative" value="1"/>
-			<param name="texHeight" type="relative" value="1"/>
-		</setupProjection>
-		<texture texturePath="textures/window.9.tif"/>
-	</rule>
-	<rule name="WindowGlass_06">
 		<setupProjection axesSelector="scope.xy">
 			<param name="texWidth" type="relative" value="1"/>
 			<param name="texHeight" type="relative" value="1"/>
