@@ -94,6 +94,8 @@ void CGA::derive(const std::map<std::string, Grammar>& grammars, const std::map<
 		boost::shared_ptr<Shape> shape = stack.front();
 		stack.pop_front();
 
+		std::cout << shape->_name << std::endl;
+
 		bool found = false;
 		bool default_found = false;
 		std::string name;
