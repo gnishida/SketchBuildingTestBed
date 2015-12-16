@@ -39,6 +39,7 @@ public:
 	QPoint lastPos;
 	bool dragging;
 	bool ctrlPressed;
+	bool shiftPressed;
 		
 	std::string stage;
 	std::string preStage;
