@@ -247,9 +247,7 @@ void GLWidget3D::loadCGA(char* filename) {
 void GLWidget3D::generateGeometry() {
 	scene.generateGeometry(&renderManager, stage);
 
-	//if (stage == "final" || stage == "peek_final") {
-		renderManager.updateShadowMap(this, light_dir, light_mvpMatrix);
-	//}
+	renderManager.updateShadowMap(this, light_dir, light_mvpMatrix);
 }
 
 void GLWidget3D::updateGeometry() {
