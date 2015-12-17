@@ -288,6 +288,15 @@ void GLWidget3D::selectOption(int option_index) {
 void GLWidget3D::updateBuildingOptions() {
 	mainWin->thumbsList->clear();
 
+	time_t start = clock();
+
+	cv::Mat img;
+	convertSketch(false, img);
+	//std::vector<Prediction> predictions = classifiers["building"]->Classify(img, 10);
+
+	time_t end = clock();
+	std::cout << "Duration of classification: " << (double)(end - start) / CLOCKS_PER_SEC << "sec." << std::endl;
+
 	std::vector<int> indexes;
 	for (int i = 0; i < grammarImages["building"].size(); ++i) {
 		indexes.push_back(i);
@@ -306,6 +315,15 @@ void GLWidget3D::updateBuildingOptions() {
 
 void GLWidget3D::updateRoofOptions() {
 	mainWin->thumbsList->clear();
+
+	time_t start = clock();
+
+	cv::Mat img;
+	convertSketch(false, img);
+	//std::vector<Prediction> predictions = classifiers["roof"]->Classify(img, 10);
+
+	time_t end = clock();
+	std::cout << "Duration of classification: " << (double)(end - start) / CLOCKS_PER_SEC << "sec." << std::endl;
 
 	std::vector<int> indexes;
 	for (int i = 0; i < grammarImages["roof"].size(); ++i) {
@@ -362,6 +380,15 @@ void GLWidget3D::updateFloorOptions() {
 void GLWidget3D::updateWindowOptions() {
 	mainWin->thumbsList->clear();
 
+	time_t start = clock();
+
+	cv::Mat img;
+	convertSketch(false, img);
+	//std::vector<Prediction> predictions = classifiers["window"]->Classify(img, 10);
+
+	time_t end = clock();
+	std::cout << "Duration of classification: " << (double)(end - start) / CLOCKS_PER_SEC << "sec." << std::endl;
+
 	std::vector<int> indexes;
 	for (int i = 0; i < grammarImages["window"].size(); ++i) {
 		indexes.push_back(i);
@@ -380,6 +407,15 @@ void GLWidget3D::updateWindowOptions() {
 
 void GLWidget3D::updateLedgeOptions() {
 	mainWin->thumbsList->clear();
+
+	time_t start = clock();
+
+	cv::Mat img;
+	convertSketch(false, img);
+	//std::vector<Prediction> predictions = classifiers["ledge"]->Classify(img, 10);
+
+	time_t end = clock();
+	std::cout << "Duration of classification: " << (double)(end - start) / CLOCKS_PER_SEC << "sec." << std::endl;
 
 	std::vector<int> indexes;
 	for (int i = 0; i < grammarImages["ledge"].size(); ++i) {
@@ -402,25 +438,17 @@ void GLWidget3D::updateLedgeOptions() {
  * Then, display the options ordered by the probabilities.
  */
 void GLWidget3D::predictBuilding(int grammar_id) {
-	time_t start = clock();
-
 	renderManager.removeObjects();
 
-	// convert the sketch to grayscale
-	cv::Mat mat(sketch.height(), sketch.width(), CV_8UC3, sketch.bits(), sketch.bytesPerLine());
-	cv::Mat grayMat;
-	cv::cvtColor(mat, grayMat, CV_BGR2GRAY);
-
-	// resize the sketch
-	cv::resize(grayMat, grayMat, cv::Size(256, 256));
-	cv::threshold(grayMat, grayMat, 250, 255, CV_THRESH_BINARY);
-	cv::resize(grayMat, grayMat, cv::Size(128, 128));
-	cv::threshold(grayMat, grayMat, 250, 255, CV_THRESH_BINARY);
+	time_t start = clock();
 
 	// predict parameter values by deep learning
-	//std::vector<float> params = regressions[grammar_id]->Predict(grayMat);
+	cv::Mat img;
+	convertSketch(true, img);
+	//std::vector<float> params = regressions["building"][grammar_id]->Predict(img);
 
-	//renderManager.renderingMode = RenderManager::RENDERING_MODE_BASIC;
+	time_t end = clock();
+	std::cout << "Duration of regression: " << (double)(end - start) / CLOCKS_PER_SEC << "sec." << std::endl;
 	
 	//////////////////////// DEBUG ////////////////////////
 	std::vector<float> params(7);
@@ -469,41 +497,36 @@ void GLWidget3D::predictBuilding(int grammar_id) {
 	scene.currentObject().setHeight((ranges[0].second - ranges[0].first) * params[0] + ranges[0].first);
 	
 	generateGeometry();
-
-	time_t end = clock();
-	//std::cout << "Duration: " << (double)(end - start) / CLOCKS_PER_SEC << "sec." << std::endl;
-
 	update();
 }
 
 void GLWidget3D::predictRoof(int grammar_id) {
-	//if (scene._selectedFaceName.empty()) {
 	if (!scene.faceSelector->selected()) {
 		std::cout << "Warning: face is not selected." << std::endl;
 		return;
 	}
 
-	time_t start = clock();
-
 	renderManager.removeObjects();
 
-	//////////////////////// DEBUG ////////////////////////
-	scene.currentObject().setGrammar(scene.faceSelector->selectedFaceName(), grammars["roof"][grammar_id]);
+	time_t start = clock();
 
-	generateGeometry();
-
-	// select the face again
-	//faceSelector.reselectFace();
-	//scene.updateGeometry(&renderManager, stage);
+	// predict parameter values by deep learning
+	cv::Mat img;
+	convertSketch(true, img);
+	//std::vector<float> params = regressions["roof"][grammar_id]->Predict(img);
 
 	time_t end = clock();
-	//std::cout << "Duration: " << (double)(end - start) / CLOCKS_PER_SEC << "sec." << std::endl;
+	std::cout << "Duration of regression: " << (double)(end - start) / CLOCKS_PER_SEC << "sec." << std::endl;
 
+	// set parameter values
+	scene.currentObject().setGrammar(scene.faceSelector->selectedFaceName(), grammars["roof"][grammar_id]);
+	//scene.currentObject().setGrammar(scene.faceSelector->selectedFaceName(), grammars["roof"][grammar_id], params, true);
+
+	generateGeometry();
 	update();
 }
 
 void GLWidget3D::predictFacade(int grammar_id, const std::vector<float>& params) {
-	//if (scene._selectedFaceName.empty()) {
 	if (!scene.faceSelector->selected()) {
 		std::cout << "Warning: face is not selected." << std::endl;
 		return;
@@ -513,15 +536,10 @@ void GLWidget3D::predictFacade(int grammar_id, const std::vector<float>& params)
 	scene.currentObject().setGrammar(scene.faceSelector->selectedFaceName(), grammars["facade"][grammar_id], params, false);
 	generateGeometry();
 
-	// select the face again
-	//faceSelector.reselectFace();
-	//scene.updateGeometry(&renderManager, stage);
-
 	update();
 }
 
 void GLWidget3D::predictFloor(int grammar_id, const std::vector<float>& params) {
-	//if (scene._selectedFaceName.empty()) {
 	if (!scene.faceSelector->selected()) {
 		std::cout << "Warning: face is not selected." << std::endl;
 		return;
@@ -531,62 +549,58 @@ void GLWidget3D::predictFloor(int grammar_id, const std::vector<float>& params) 
 	scene.currentObject().setGrammar(scene.faceSelector->selectedFaceName(), grammars["floor"][grammar_id], params, false);
 	generateGeometry();
 
-	// select the face again
-	//faceSelector.reselectFace();
-	//scene.updateGeometry(&renderManager, stage);
-
 	update();
 }
 
 void GLWidget3D::predictWindow(int grammar_id) {
-	//if (scene._selectedFaceName.empty()) {
 	if (!scene.faceSelector->selected()) {
 		std::cout << "Warning: face is not selected." << std::endl;
 		return;
 	}
 
-	time_t start = clock();
-
 	renderManager.removeObjects();
 
-	//////////////////////// DEBUG ////////////////////////
-	scene.currentObject().setGrammar(scene.faceSelector->selectedFaceName(), grammars["window"][grammar_id]);
+	time_t start = clock();
 
-	generateGeometry();
-
-	// select the face again
-	//faceSelector.reselectFace();
-	//scene.updateGeometry(&renderManager, stage);
+	// predict parameter values by deep learning
+	cv::Mat img;
+	convertSketch(true, img);
+	//std::vector<float> params = regressions["window"][grammar_id]->Predict(img);
 
 	time_t end = clock();
-	//std::cout << "Duration: " << (double)(end - start) / CLOCKS_PER_SEC << "sec." << std::endl;
+	std::cout << "Duration of regression: " << (double)(end - start) / CLOCKS_PER_SEC << "sec." << std::endl;
 
+	// set parameter values
+	scene.currentObject().setGrammar(scene.faceSelector->selectedFaceName(), grammars["window"][grammar_id]);
+	//scene.currentObject().setGrammar(scene.faceSelector->selectedFaceName(), grammars["window"][grammar_id], params, true);
+
+	generateGeometry();
 	update();
 }
 
 void GLWidget3D::predictLedge(int grammar_id) {
-	//if (scene._selectedFaceName.empty()) {
 	if (!scene.faceSelector->selected()) {
 		std::cout << "Warning: face is not selected." << std::endl;
 		return;
 	}
 
-	time_t start = clock();
-
 	renderManager.removeObjects();
 
-	//////////////////////// DEBUG ////////////////////////
-	scene.currentObject().setGrammar(scene.faceSelector->selectedFaceName(), grammars["ledge"][grammar_id]);
+	time_t start = clock();
 
-	generateGeometry();
-
-	// select the face again
-	//faceSelector.reselectFace();
-	//scene.updateGeometry(&renderManager, stage);
+	// predict parameter values by deep learning
+	cv::Mat img;
+	convertSketch(true, img);
+	//std::vector<float> params = regressions["ledge"][grammar_id]->Predict(img);
 
 	time_t end = clock();
-	//std::cout << "Duration: " << (double)(end - start) / CLOCKS_PER_SEC << "sec." << std::endl;
+	std::cout << "Duration of regression: " << (double)(end - start) / CLOCKS_PER_SEC << "sec." << std::endl;
 
+	// set parameter values
+	scene.currentObject().setGrammar(scene.faceSelector->selectedFaceName(), grammars["ledge"][grammar_id]);
+	//scene.currentObject().setGrammar(scene.faceSelector->selectedFaceName(), grammars["ledge"][grammar_id], params, true);
+
+	generateGeometry();
 	update();
 }
 
@@ -778,6 +792,44 @@ void GLWidget3D::addBuildingMass() {
 glm::vec3 GLWidget3D::viewVector(const glm::vec2& point, const glm::mat4& mvMatrix, float focalLength, float aspect) {
 	glm::vec3 dir((point.x - width() * 0.5f) * 2.0f / width() * aspect, (height() * 0.5f - point.y) * 2.0f / height(), -focalLength);
 	return glm::vec3(glm::inverse(mvMatrix) * glm::vec4(dir, 0));
+}
+
+void GLWidget3D::convertSketch(bool regression, cv::Mat& result) {
+	if (regression) {
+		cv::Mat mat = cv::Mat(sketch.height(), sketch.width(), CV_8UC3, sketch.bits(), sketch.bytesPerLine());
+		cv::Mat grayMat;
+		cv::cvtColor(mat, grayMat, CV_BGR2GRAY);
+
+		// resize the sketch
+		int min_size = std::min(grayMat.cols, grayMat.rows);
+		result = grayMat(cv::Rect((grayMat.cols - min_size) * 0.5, (grayMat.rows - min_size) * 0.5, min_size, min_size));
+
+		if (min_size > 512) {
+			cv::resize(result, result, cv::Size(512, 512));
+			cv::threshold(result, result, 250, 255, CV_THRESH_BINARY);
+
+		}
+		cv::resize(result, result, cv::Size(256, 256));
+		cv::threshold(result, result, 250, 255, CV_THRESH_BINARY);
+		cv::resize(result, result, cv::Size(128, 128));
+		cv::threshold(result, result, 250, 255, CV_THRESH_BINARY);
+	}
+	else {
+		QImage swapped = sketch.rgbSwapped();
+		cv::Mat mat = cv::Mat(swapped.height(), swapped.width(), CV_8UC3, swapped.bits(), swapped.bytesPerLine()).clone();
+
+		// resize the sketch
+		int min_size = std::min(mat.cols, mat.rows);
+		result = mat(cv::Rect((mat.cols - min_size) * 0.5, (mat.rows - min_size) * 0.5, min_size, min_size));
+
+		if (min_size > 512) {
+			cv::resize(result, result, cv::Size(512, 512));
+			cv::threshold(result, result, 250, 255, CV_THRESH_BINARY);
+
+		}
+		cv::resize(result, result, cv::Size(256, 256));
+		cv::threshold(result, result, 250, 255, CV_THRESH_BINARY);
+	}
 }
 
 void GLWidget3D::changeStage(const std::string& stage) {
