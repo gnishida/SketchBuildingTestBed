@@ -37,9 +37,11 @@
    </widget>
    <widget class="QMenu" name="menuShape">
     <property name="title">
-     <string>Shape</string>
+     <string>Edit</string>
     </property>
     <addaction name="actionAddBuildingMass"/>
+    <addaction name="actionCopyBuildingMass"/>
+    <addaction name="actionDeleteBuildingMass"/>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
@@ -205,6 +207,22 @@
   <action name="actionSetting">
    <property name="text">
     <string>Setting</string>
+   </property>
+  </action>
+  <action name="actionCopyBuildingMass">
+   <property name="text">
+    <string>Copy Building Mass</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+C</string>
+   </property>
+  </action>
+  <action name="actionDeleteBuildingMass">
+   <property name="text">
+    <string>Delete Building Mass</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+X</string>
    </property>
   </action>
  </widget>

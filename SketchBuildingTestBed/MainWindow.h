@@ -31,6 +31,8 @@ public slots:
 	void onOpenCGA();
 	void onSaveGeometry();
 	void onAddBuildingMass();
+	void onCopyBuildingMass();
+	void onDeleteBuildingMass();
 	void onViewShadow();
 	void onViewRendering();
 	void onSetting();

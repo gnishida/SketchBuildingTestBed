@@ -45,6 +45,8 @@ public:
     QAction *actionViewHatching;
     QAction *actionViewSketchyRendering;
     QAction *actionSetting;
+    QAction *actionCopyBuildingMass;
+    QAction *actionDeleteBuildingMass;
     QWidget *centralWidget;
     QMenuBar *menuBar;
     QMenu *menuFile;
@@ -105,6 +107,10 @@ public:
         actionViewSketchyRendering->setCheckable(true);
         actionSetting = new QAction(MainWindowClass);
         actionSetting->setObjectName(QStringLiteral("actionSetting"));
+        actionCopyBuildingMass = new QAction(MainWindowClass);
+        actionCopyBuildingMass->setObjectName(QStringLiteral("actionCopyBuildingMass"));
+        actionDeleteBuildingMass = new QAction(MainWindowClass);
+        actionDeleteBuildingMass->setObjectName(QStringLiteral("actionDeleteBuildingMass"));
         centralWidget = new QWidget(MainWindowClass);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         MainWindowClass->setCentralWidget(centralWidget);
@@ -139,6 +145,8 @@ public:
         menuFile->addSeparator();
         menuFile->addAction(actionExit);
         menuShape->addAction(actionAddBuildingMass);
+        menuShape->addAction(actionCopyBuildingMass);
+        menuShape->addAction(actionDeleteBuildingMass);
         menuView->addAction(actionViewShadow);
         menuView->addSeparator();
         menuView->addAction(actionViewBasicRendering);
@@ -180,8 +188,12 @@ public:
         actionViewHatching->setText(QApplication::translate("MainWindowClass", "Hatching", 0));
         actionViewSketchyRendering->setText(QApplication::translate("MainWindowClass", "Sketchy Rendering", 0));
         actionSetting->setText(QApplication::translate("MainWindowClass", "Setting", 0));
+        actionCopyBuildingMass->setText(QApplication::translate("MainWindowClass", "Copy Building Mass", 0));
+        actionCopyBuildingMass->setShortcut(QApplication::translate("MainWindowClass", "Ctrl+C", 0));
+        actionDeleteBuildingMass->setText(QApplication::translate("MainWindowClass", "Delete Building Mass", 0));
+        actionDeleteBuildingMass->setShortcut(QApplication::translate("MainWindowClass", "Ctrl+X", 0));
         menuFile->setTitle(QApplication::translate("MainWindowClass", "File", 0));
-        menuShape->setTitle(QApplication::translate("MainWindowClass", "Shape", 0));
+        menuShape->setTitle(QApplication::translate("MainWindowClass", "Edit", 0));
         menuView->setTitle(QApplication::translate("MainWindowClass", "View", 0));
         menuOptions->setTitle(QApplication::translate("MainWindowClass", "Options", 0));
     } // retranslateUi
