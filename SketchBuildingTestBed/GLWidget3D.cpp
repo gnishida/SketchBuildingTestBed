@@ -110,6 +110,7 @@ void GLWidget3D::clearSketch() {
 void GLWidget3D::clearGeometry() {
 	scene.clear();
 	scene.generateGeometry(&renderManager, stage);
+	renderManager.updateShadowMap(this, light_dir, light_mvpMatrix);
 	update();
 }
 
