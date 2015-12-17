@@ -81,90 +81,6 @@ GLWidget3D::GLWidget3D(QWidget *parent) : QGLWidget(QGLFormat(QGL::SampleBuffers
 	regressions[0] = new Regression("../models/cuboid_43/deploy.prototxt", "../models/cuboid_43/train_iter_64000.caffemodel");
 	regressions[1] = new Regression("../models/lshape_44/deploy.prototxt", "../models/lshape_44/train_iter_64000.caffemodel");
 	*/
-
-
-
-
-
-	// initialize stylized polylines
-	style_polylines.resize(10);
-	style_polylines[0].push_back(glm::vec2(-0.025, -0.025));
-	style_polylines[0].push_back(glm::vec2(0.3, 0.035));
-	style_polylines[0].push_back(glm::vec2(0.6, 0.05));
-	style_polylines[0].push_back(glm::vec2(0.85, 0.04));
-	style_polylines[0].push_back(glm::vec2(1.01, 0.02));
-
-	style_polylines[1].push_back(glm::vec2(-0.01, 0.01));
-	style_polylines[1].push_back(glm::vec2(0.13, -0.01));
-	style_polylines[1].push_back(glm::vec2(0.27, -0.02));
-	style_polylines[1].push_back(glm::vec2(0.7, -0.02));
-	style_polylines[1].push_back(glm::vec2(0.81, 0));
-	style_polylines[1].push_back(glm::vec2(1.02, 0));
-
-	style_polylines[2].push_back(glm::vec2(-0.02, 0.0));
-	style_polylines[2].push_back(glm::vec2(0.12, 0.01));
-	style_polylines[2].push_back(glm::vec2(0.37, 0.02));
-	style_polylines[2].push_back(glm::vec2(0.6, 0.02));
-	style_polylines[2].push_back(glm::vec2(0.77, 0.01));
-	style_polylines[2].push_back(glm::vec2(0.91, 0.005));
-	style_polylines[2].push_back(glm::vec2(0.99, -0.01));
-
-	style_polylines[3].push_back(glm::vec2(-0.02, 0.0));
-	style_polylines[3].push_back(glm::vec2(0.57, -0.01));
-	style_polylines[3].push_back(glm::vec2(0.8, -0.01));
-	style_polylines[3].push_back(glm::vec2(1.01, 0.01));
-
-	style_polylines[4].push_back(glm::vec2(-0.01, 0.0));
-	style_polylines[4].push_back(glm::vec2(0.13, -0.01));
-	style_polylines[4].push_back(glm::vec2(0.23, -0.02));
-	style_polylines[4].push_back(glm::vec2(0.31, -0.02));
-	style_polylines[4].push_back(glm::vec2(0.38, -0.01));
-	style_polylines[4].push_back(glm::vec2(0.46, 0.0));
-	style_polylines[4].push_back(glm::vec2(0.61, 0.02));
-	style_polylines[4].push_back(glm::vec2(0.68, 0.03));
-	style_polylines[4].push_back(glm::vec2(0.8, 0.03));
-	style_polylines[4].push_back(glm::vec2(0.88, 0.02));
-	style_polylines[4].push_back(glm::vec2(0.97, 0.01));
-
-	style_polylines[5].push_back(glm::vec2(0.05, -0.04));
-	style_polylines[5].push_back(glm::vec2(0.29, -0.03));
-	style_polylines[5].push_back(glm::vec2(0.47, -0.01));
-	style_polylines[5].push_back(glm::vec2(0.59, 0.02));
-	style_polylines[5].push_back(glm::vec2(0.75, 0.03));
-	style_polylines[5].push_back(glm::vec2(1.03, 0.04));
-
-	style_polylines[6].push_back(glm::vec2(-0.02, 0.04));
-	style_polylines[6].push_back(glm::vec2(0.16, -0.01));
-	style_polylines[6].push_back(glm::vec2(0.42, -0.06));
-	style_polylines[6].push_back(glm::vec2(0.65, -0.07));
-	style_polylines[6].push_back(glm::vec2(0.83, -0.04));
-	style_polylines[6].push_back(glm::vec2(0.98, -0.02));
-
-	style_polylines[7].push_back(glm::vec2(0.0, 0.0));
-	style_polylines[7].push_back(glm::vec2(0.24, 0.02));
-	style_polylines[7].push_back(glm::vec2(0.59, 0.03));
-	style_polylines[7].push_back(glm::vec2(0.79, 0.01));
-	style_polylines[7].push_back(glm::vec2(0.91, -0.01));
-	style_polylines[7].push_back(glm::vec2(1.02, -0.04));
-
-	style_polylines[8].push_back(glm::vec2(-0.01, -0.02));
-	style_polylines[8].push_back(glm::vec2(0.15, 0.0));
-	style_polylines[8].push_back(glm::vec2(0.28, 0.02));
-	style_polylines[8].push_back(glm::vec2(0.44, 0.01));
-	style_polylines[8].push_back(glm::vec2(0.59, 0.0));
-	style_polylines[8].push_back(glm::vec2(0.74, -0.03));
-	style_polylines[8].push_back(glm::vec2(0.81, -0.04));
-	style_polylines[8].push_back(glm::vec2(0.89, -0.04));
-	style_polylines[8].push_back(glm::vec2(0.98, -0.03));
-
-	style_polylines[9].push_back(glm::vec2(0.02, -0.02));
-	style_polylines[9].push_back(glm::vec2(0.41, -0.03));
-	style_polylines[9].push_back(glm::vec2(0.56, -0.04));
-	style_polylines[9].push_back(glm::vec2(0.68, -0.03));
-	style_polylines[9].push_back(glm::vec2(0.78, -0.02));
-	style_polylines[9].push_back(glm::vec2(0.85, -0.01));
-	style_polylines[9].push_back(glm::vec2(0.94, 0.0));
-	style_polylines[9].push_back(glm::vec2(0.96, 0.02));
 }
 
 void GLWidget3D::drawLineTo(const QPoint &endPoint) {
@@ -518,7 +434,6 @@ void GLWidget3D::predictRoof(int grammar_id) {
 
 	// set parameter values
 	scene.currentObject().setGrammar(scene.faceSelector->selectedFaceName(), grammars["roof"][grammar_id]);
-	//scene.currentObject().setGrammar(scene.faceSelector->selectedFaceName(), grammars["roof"][grammar_id], params, true);
 
 	generateGeometry();
 	update();
@@ -570,7 +485,6 @@ void GLWidget3D::predictWindow(int grammar_id) {
 
 	// set parameter values
 	scene.currentObject().setGrammar(scene.faceSelector->selectedFaceName(), grammars["window"][grammar_id]);
-	//scene.currentObject().setGrammar(scene.faceSelector->selectedFaceName(), grammars["window"][grammar_id], params, true);
 
 	generateGeometry();
 	update();
@@ -596,7 +510,6 @@ void GLWidget3D::predictLedge(int grammar_id) {
 
 	// set parameter values
 	scene.currentObject().setGrammar(scene.faceSelector->selectedFaceName(), grammars["ledge"][grammar_id]);
-	//scene.currentObject().setGrammar(scene.faceSelector->selectedFaceName(), grammars["ledge"][grammar_id], params, true);
 
 	generateGeometry();
 	update();
@@ -892,7 +805,6 @@ void GLWidget3D::changeMode(int new_mode) {
 	}
 
 	renderManager.updateShadowMap(this, light_dir, light_mvpMatrix);
-
 	update();
 }
 
