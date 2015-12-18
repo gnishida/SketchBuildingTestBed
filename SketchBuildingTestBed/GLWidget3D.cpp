@@ -429,6 +429,7 @@ void GLWidget3D::predictRoof(int grammar_id) {
 	cv::Mat img;
 	convertSketch(true, img);
 	//std::vector<float> params = regressions["roof"][grammar_id]->Predict(img);
+	//debug("Roof regression", params);
 
 	time_t end = clock();
 	std::cout << "Duration of regression: " << (double)(end - start) / CLOCKS_PER_SEC << "sec." << std::endl;
@@ -480,6 +481,7 @@ void GLWidget3D::predictWindow(int grammar_id) {
 	cv::Mat img;
 	convertSketch(true, img);
 	//std::vector<float> params = regressions["window"][grammar_id]->Predict(img);
+	//debug("Window regression", params);
 
 	time_t end = clock();
 	std::cout << "Duration of regression: " << (double)(end - start) / CLOCKS_PER_SEC << "sec." << std::endl;
@@ -505,6 +507,7 @@ void GLWidget3D::predictLedge(int grammar_id) {
 	cv::Mat img;
 	convertSketch(true, img);
 	//std::vector<float> params = regressions["ledge"][grammar_id]->Predict(img);
+	//debug("Ledge regression", params);
 
 	time_t end = clock();
 	std::cout << "Duration of regression: " << (double)(end - start) / CLOCKS_PER_SEC << "sec." << std::endl;
