@@ -107,5 +107,7 @@ protected:
 	void initializeGL();
 	void resizeGL(int width, int height);
 	void paintEvent(QPaintEvent *event);
+
+	void debug(const std::string& message, const std::vector<float>& values);
 };
 

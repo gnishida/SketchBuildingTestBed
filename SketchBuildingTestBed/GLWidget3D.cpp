@@ -1351,3 +1351,11 @@ void GLWidget3D::paintEvent(QPaintEvent *event) {
 	glEnable(GL_DEPTH_TEST);
 }
 
+void GLWidget3D::debug(const std::string& message, const std::vector<float>& values) {
+	std::cout << message << ": ";
+	for (int i = 0; i < values.size(); ++i) {
+		if (i > 0) std::cout << ", ";
+		std::cout << values[i];
+	}
+	std::cout << std::endl;
+}
