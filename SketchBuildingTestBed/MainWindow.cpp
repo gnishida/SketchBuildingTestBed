@@ -98,7 +98,9 @@ void MainWindow::keyReleaseEvent(QKeyEvent* e) {
  */
 void MainWindow::onNew() {
 	glWidget->clearSketch();
+	glWidget->scene.buildingSelector->unselectBuilding();
 	glWidget->clearGeometry();
+	glWidget->renderManager.renderingMode = RenderManager::RENDERING_MODE_HATCHING;
 }
 
 void MainWindow::onClearSketch() {

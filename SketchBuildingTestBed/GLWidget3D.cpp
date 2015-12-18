@@ -1047,13 +1047,10 @@ void GLWidget3D::initializeGL() {
 	////////////////////////////////
 	renderManager.init("", "", "", true, 8192);
 	renderManager.resize(this->width(), this->height());
+	renderManager.renderingMode = RenderManager::RENDERING_MODE_HATCHING;
 
 	glUniform1i(glGetUniformLocation(renderManager.programs["ssao"], "tex0"), 0);//tex0: 0
-
-
-
-
-
+	
 	sketch = QImage(this->width(), this->height(), QImage::Format_RGB888);
 	sketch.fill(qRgba(255, 255, 255, 255));
 
