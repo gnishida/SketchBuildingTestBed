@@ -36,6 +36,7 @@ public:
 	MainWindow* mainWin;
 	QImage sketch;
 	std::vector<std::vector<glm::vec2> > strokes;
+	std::vector<glm::vec2> lasso;
 	QPoint lastPos;
 	bool dragging;
 	bool ctrlPressed;
@@ -62,8 +63,9 @@ public:
 	std::vector<std::vector<glm::vec2> > style_polylines;
 
 public:
-	GLWidget3D(QWidget *parent);
-	void drawLineTo(const QPoint &endPoint);
+	GLWidget3D(QWidget* parent);
+	void drawLineTo(const QPoint& endPoint);
+	void drawLassoLineTo(const QPoint& endPoint);
 	void clearSketch();
 	void clearGeometry();
 	void drawScene();
@@ -87,6 +89,7 @@ public:
 	void predictLedge(int grammar_id);
 
 	bool selectFace(const glm::vec2& mouse_pos);
+	bool selectStageAndFace(const glm::vec2& mouse_pos);
 	bool selectBuilding(const glm::vec2& mouse_pos);
 	bool selectBuildingControlPoint(const glm::vec2& mouse_pos);
 	void addBuildingMass();
@@ -101,12 +104,12 @@ public:
 	void keyReleaseEvent(QKeyEvent* e);
 
 protected:
-	void mousePressEvent(QMouseEvent *e);
-	void mouseMoveEvent(QMouseEvent *e);
-	void mouseReleaseEvent(QMouseEvent *e);
+	void mousePressEvent(QMouseEvent* e);
+	void mouseMoveEvent(QMouseEvent * e);
+	void mouseReleaseEvent(QMouseEvent* e);
 	void initializeGL();
 	void resizeGL(int width, int height);
-	void paintEvent(QPaintEvent *event);
+	void paintEvent(QPaintEvent *e);
 
 	void debug(const std::string& message, const std::vector<float>& values);
 };

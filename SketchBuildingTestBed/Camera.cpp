@@ -97,12 +97,6 @@ void Camera::updateMVPMatrix() {
 	p2 = mvpMatrix * p2;
 	p3 = mvpMatrix * p3;
 	p4 = mvpMatrix * p4;
-	std::cout << "--------------------------" << std::endl;
-	std::cout << "p1: " << p1.x/p1.w << "," << p1.y/p1.w << std::endl;
-	std::cout << "p2: " << p2.x / p2.w << "," << p2.y / p2.w << std::endl;
-	std::cout << "p3: " << p3.x / p3.w << "," << p3.y / p3.w << std::endl;
-	std::cout << "p4: " << p4.x / p4.w << "," << p4.y / p4.w << std::endl;
-	std::cout << "--------------------------" << std::endl;
 }
 
 glm::vec3 Camera::cameraPosInWorld() {
