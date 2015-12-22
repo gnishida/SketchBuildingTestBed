@@ -39,6 +39,7 @@ public:
 	std::vector<std::vector<float> > stroke_widths;
 	std::vector<glm::vec2> lasso;
 	std::vector<float> lasso_widths;
+	float pen_pressure;
 	QPoint lastPos;
 	bool dragging;
 	bool ctrlPressed;
@@ -107,9 +108,6 @@ public:
 
 	void keyPressEvent(QKeyEvent* e);
 	void keyReleaseEvent(QKeyEvent* e);
-	void mousePress(const QPoint& pos, Qt::MouseButtons buttons);
-	void mouseRelease(const QPoint& pos, Qt::MouseButton button);
-	void mouseMove(const QPoint& pos, float pressure, Qt::MouseButtons buttons);
 
 protected:
 	void tabletEvent(QTabletEvent* e);
