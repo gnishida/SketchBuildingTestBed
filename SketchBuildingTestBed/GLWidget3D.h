@@ -48,6 +48,7 @@ public:
 		
 	std::string stage;
 	std::string preStage;
+	int preRenderingMode;
 	int mode;
 	int demo_mode;
 	//std::vector<Regression*> regressions;
