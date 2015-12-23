@@ -208,6 +208,9 @@
     <ClCompile Include="GeneratedFiles\Release\moc_SettingDialog.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="MCMC.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Generated Files">
@@ -464,6 +467,9 @@
     </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_SettingDialog.h">
       <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MCMC.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -11,6 +11,7 @@
 #include "Rectangle.h"
 #include "GLUtils.h"
 //#include "Regression.h"
+#include "MCMC.h"
 #include <time.h>
 #include "LeftWindowItemWidget.h"
 #include "Scene.h"
@@ -86,6 +87,8 @@ GLWidget3D::GLWidget3D(QWidget *parent) : QGLWidget(QGLFormat(QGL::SampleBuffers
 	regressions[0] = new Regression("../models/cuboid_43/deploy.prototxt", "../models/cuboid_43/train_iter_64000.caffemodel");
 	regressions[1] = new Regression("../models/lshape_44/deploy.prototxt", "../models/lshape_44/train_iter_64000.caffemodel");
 	*/
+
+	mcmc = new MCMC(this);
 }
 
 void GLWidget3D::drawLineTo(const QPoint &endPoint, float width) {
@@ -372,23 +375,35 @@ void GLWidget3D::updateLedgeOptions() {
 void GLWidget3D::predictBuilding(int grammar_id) {
 	renderManager.removeObjects();
 
-	time_t start = clock();
-
 	// predict parameter values by deep learning
+	time_t start = clock();
 	cv::Mat img;
 	convertSketch(true, img);
-	//std::vector<float> params = regressions["building"][grammar_id]->Predict(img);
-
+	std::vector<float> params(5);
+	for (int i = 0; i < params.size(); ++i) params[i] = 0.5f;
+	debug("Building regression: ", params);
 	time_t end = clock();
 	std::cout << "Duration of regression: " << (double)(end - start) / CLOCKS_PER_SEC << "sec." << std::endl;
-	
-	std::vector<float> params(7);
-	for (int i = 0; i < params.size(); ++i) params[i] = 0.5f;
+
+	// optimize the parameter values by MCMC
+	start = clock();
+	mcmc->optimize(grammars["building"][grammar_id], img, 10.0f, 20, current_z, params);
+	debug("Building MCMC: ", params);
+	end = clock();
+	std::cout << "Duration of MCMC: " << (double)(end - start) / CLOCKS_PER_SEC << "sec." << std::endl;
 
 	float offset_x = params[0] * 16 - 8;
 	float offset_y = params[1] * 16 - 8;
 	float object_width = params[2] * 24 + 4;
 	float object_depth = params[3] * 24 + 4;
+
+	// HACK: for observatory
+	if (grammar_id == 3) {
+		float avg_width_depth = (object_width + object_depth) * 0.5f;
+		object_width = avg_width_depth;
+		object_depth = avg_width_depth;
+	}
+
 	offset_x -= object_width * 0.5f;
 	offset_y -= object_depth * 0.5f;
 
@@ -400,8 +415,6 @@ void GLWidget3D::predictBuilding(int grammar_id) {
 		scene.alignObjects(align_threshold);
 	}
 	
-	//std::cout << offset_x << "," << offset_y << "," << object_width << "," << object_depth << std::endl;
-
 	// remove the first four parameters because they are not included in the grammar
 	params.erase(params.begin(), params.begin() + 4);
 	std::cout << "Height: " << params[0] << std::endl;

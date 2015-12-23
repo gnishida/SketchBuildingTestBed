@@ -23,6 +23,7 @@ using namespace std;
 class Classifier;
 class MainWindow;
 //class Regression;
+class MCMC;
 
 class GLWidget3D : public QGLWidget {
 public:
@@ -54,6 +55,7 @@ public:
 	float align_threshold;
 	time_t mouse_pressed_time;
 	//std::vector<Regression*> regressions;
+	MCMC* mcmc;
 	std::map<std::string, std::vector<QImage> > grammarImages;
 	std::map<std::string, std::vector<cga::Grammar> > grammars;
 	sc::Scene scene;
