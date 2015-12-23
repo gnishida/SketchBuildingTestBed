@@ -392,8 +392,8 @@ void GLWidget3D::predictBuilding(int grammar_id) {
 	end = clock();
 	std::cout << "Duration of MCMC: " << (double)(end - start) / CLOCKS_PER_SEC << "sec." << std::endl;
 
-	float offset_x = params[0] * 16 - 8;
-	float offset_y = params[1] * 16 - 8;
+	float offset_x = params[0] * 24 - 12;
+	float offset_y = params[1] * 24 - 12;
 	float object_width = params[2] * 24 + 4;
 	float object_depth = params[3] * 24 + 4;
 
@@ -549,11 +549,7 @@ bool GLWidget3D::selectFace(const glm::vec2& mouse_pos) {
 		if (scene.faceSelector->selectFace(cameraPos, view_dir, stage, glm::vec3(0, 1, 0))) {
 			scene.newObject();
 
-			// shift the camera such that the selected face becomes a ground plane.
-			intCamera = InterpolationCamera(camera, 30, -45, 0, computeDownwardedCameraPos(scene.faceSelector->selectedFace()->vertices[0].position.y + CAMERA_DEFAULT_HEIGHT, CAMERA_DEFAULT_DEPTH, intCamera.camera_end.xrot));
-			current_z = scene.faceSelector->selectedFace()->vertices[0].position.y;
-
-			scene.faceSelector->selectedFace()->select();
+			selectFaceForBuilding();
 		}
 		else {
 			scene.newObject();
@@ -567,31 +563,7 @@ bool GLWidget3D::selectFace(const glm::vec2& mouse_pos) {
 	}
 	else if (stage == "roof") {
 		if (scene.faceSelector->selectFace(cameraPos, view_dir, stage, glm::vec3(0, 1, 0))) {
-			// make the yrot in the rage [-180,179]
-			camera.yrot = (int)(camera.yrot + 360 * 10) % 360;
-			if (camera.yrot > 180) camera.yrot -= 360;
-
-			// find the nearest quadrant
-			float yrot = 0.0f;
-			if (camera.yrot >= -90 && camera.yrot <= 0) {
-				yrot = -45.0f;
-			}
-			else if (camera.yrot > 0 && camera.yrot <= 90) {
-				yrot = 45.0f;
-			}
-			else if (camera.yrot > 90) {
-				yrot = 135.0f;
-			}
-			else {
-				yrot = -135.0f;
-			}
-
-			// shift the camera such that the selected face becomes a ground plane.
-			intCamera = InterpolationCamera(camera, 30, yrot, 0.0, glm::vec3(0, scene.faceSelector->selectedFace()->vertices[0].position.y, CAMERA_DEFAULT_DEPTH));
-			current_z = scene.faceSelector->selectedFace()->vertices[0].position.y;
-
-			scene.faceSelector->selectedFace()->select();
-
+			selectFaceForRoof();
 			return true;
 		}
 		else {
@@ -600,18 +572,7 @@ bool GLWidget3D::selectFace(const glm::vec2& mouse_pos) {
 	}
 	else if (stage == "facade") {
 		if (scene.faceSelector->selectFace(cameraPos, view_dir, stage, glm::vec3(1, 0, 1))) {
-			// compute appropriate camera distance for the selected face
-			float rot_y = atan2f(scene.faceSelector->selectedFace()->vertices[0].normal.x, scene.faceSelector->selectedFace()->vertices[0].normal.z);
-			glutils::Face rotatedFace = scene.faceSelector->selectedFace()->rotate(-rot_y, glm::vec3(0, 1, 0));
-			float d1 = rotatedFace.bbox.sx() * 0.5f / tanf(camera.fovy * M_PI / 180.0f * 0.5f);
-			float d2 = rotatedFace.bbox.sy() * 0.5f / tanf(camera.fovy * M_PI / 180.0f * 0.5f);
-			float d = std::max(d1, d2) * 1.5f;
-
-			// turn the camera such that the selected face becomes parallel to the image plane.
-			intCamera = InterpolationCamera(camera, 0, -rot_y / M_PI * 180, 0, glm::vec3(rotatedFace.bbox.center().x, rotatedFace.bbox.center().y, rotatedFace.bbox.maxPt.z + d));
-
-			scene.faceSelector->selectedFace()->select();
-
+			selectFaceForFacade();
 			return true;
 		}
 		else {
@@ -620,18 +581,7 @@ bool GLWidget3D::selectFace(const glm::vec2& mouse_pos) {
 	}
 	else if (stage == "floor") {
 		if (scene.faceSelector->selectFace(cameraPos, view_dir, stage, glm::vec3(1, 0, 1))) {
-			// compute appropriate camera distance for the selected face
-			float rot_y = atan2f(scene.faceSelector->selectedFace()->vertices[0].normal.x, scene.faceSelector->selectedFace()->vertices[0].normal.z);
-			glutils::Face rotatedFace = scene.faceSelector->selectedFace()->rotate(-rot_y, glm::vec3(0, 1, 0));
-			float d1 = rotatedFace.bbox.sx() * 0.5f / tanf(camera.fovy * M_PI / 180.0f * 0.5f);
-			float d2 = rotatedFace.bbox.sy() * 0.5f / tanf(camera.fovy * M_PI / 180.0f * 0.5f);
-			float d = std::max(d1, d2) * 1.5f;
-
-			// turn the camera such that the selected face becomes parallel to the image plane.
-			intCamera = InterpolationCamera(camera, 0, -rot_y / M_PI * 180, 0, glm::vec3(rotatedFace.bbox.center().x, rotatedFace.bbox.center().y, rotatedFace.bbox.maxPt.z + d));
-
-			scene.faceSelector->selectedFace()->select();
-
+			selectFaceForFloor();
 			return true;
 		}
 		else {
@@ -640,18 +590,7 @@ bool GLWidget3D::selectFace(const glm::vec2& mouse_pos) {
 	}
 	else if (stage == "window") {
 		if (scene.faceSelector->selectFace(cameraPos, view_dir, stage, glm::vec3(1, 0, 1))) {
-			// compute appropriate camera distance for the selected face
-			float rot_y = atan2f(scene.faceSelector->selectedFace()->vertices[0].normal.x, scene.faceSelector->selectedFace()->vertices[0].normal.z);
-			glutils::Face rotatedFace = scene.faceSelector->selectedFace()->rotate(-rot_y, glm::vec3(0, 1, 0));
-			float d1 = rotatedFace.bbox.sx() * 0.5f / tanf(camera.fovy * M_PI / 180.0f * 0.5f);
-			float d2 = rotatedFace.bbox.sy() * 0.5f / tanf(camera.fovy * M_PI / 180.0f * 0.5f);
-			float d = std::max(d1, d2) * 1.5f;
-
-			// turn the camera such that the selected face becomes parallel to the image plane.
-			intCamera = InterpolationCamera(camera, 0, -rot_y / M_PI * 180, 0, glm::vec3(rotatedFace.bbox.center().x, rotatedFace.bbox.center().y, rotatedFace.bbox.maxPt.z + d));
-
-			scene.faceSelector->selectedFace()->select();
-
+			selectFaceForWindow();
 			return true;
 		}
 		else {
@@ -660,18 +599,7 @@ bool GLWidget3D::selectFace(const glm::vec2& mouse_pos) {
 	}
 	else if (stage == "ledge") {
 		if (scene.faceSelector->selectFace(cameraPos, view_dir, stage, glm::vec3(1, 0, 1))) {
-			// compute appropriate camera distance for the selected face
-			float rot_y = -M_PI * 0.4 + atan2f(scene.faceSelector->selectedFace()->vertices[0].normal.x, scene.faceSelector->selectedFace()->vertices[0].normal.z);
-			glutils::Face rotatedFace = scene.faceSelector->selectedFace()->rotate(-rot_y, glm::vec3(0, 1, 0));
-			float d1 = rotatedFace.bbox.sx() * 0.5f / tanf(camera.fovy * M_PI / 180.0f * 0.5f);
-			float d2 = rotatedFace.bbox.sy() * 0.5f / tanf(camera.fovy * M_PI / 180.0f * 0.5f);
-			float d = std::max(d1, d2) * 1.5f;
-
-			// turn the camera such that the selected face becomes parallel to the image plane.
-			intCamera = InterpolationCamera(camera, 0, -rot_y / M_PI * 180, 0, glm::vec3(rotatedFace.bbox.center().x, rotatedFace.bbox.center().y, rotatedFace.bbox.maxPt.z + d));
-
-			scene.faceSelector->selectedFace()->select();
-
+			selectFaceForLedge();
 			return true;
 		}
 		else {
@@ -700,103 +628,133 @@ bool GLWidget3D::selectStageAndFace(const glm::vec2& mouse_pos) {
 			stage = "roof";
 			scene.faceSelector->selectFace(object_id, face);
 
-			// make the yrot in the rage [-180,179]
-			camera.yrot = (int)(camera.yrot + 360 * 10) % 360;
-			if (camera.yrot > 180) camera.yrot -= 360;
-
-			// find the nearest quadrant
-			float yrot = 0.0f;
-			if (camera.yrot >= -90 && camera.yrot <= 0) {
-				yrot = -45.0f;
-			}
-			else if (camera.yrot > 0 && camera.yrot <= 90) {
-				yrot = 45.0f;
-			}
-			else if (camera.yrot > 90) {
-				yrot = 135.0f;
-			}
-			else {
-				yrot = -135.0f;
-			}
-
-			// shift the camera such that the selected face becomes a ground plane.
-			intCamera = InterpolationCamera(camera, 30, yrot, 0.0, glm::vec3(0, scene.faceSelector->selectedFace()->vertices[0].position.y, CAMERA_DEFAULT_DEPTH));
-			current_z = scene.faceSelector->selectedFace()->vertices[0].position.y;
-
-			scene.faceSelector->selectedFace()->select();
+			selectFaceForRoof();
 			return true;
 		}
 		else if (face->name.compare(0, 6, "Facade") == 0) {
 			stage = "facade";
 			scene.faceSelector->selectFace(object_id, face);
 
-			// compute appropriate camera distance for the selected face
-			float rot_y = atan2f(scene.faceSelector->selectedFace()->vertices[0].normal.x, scene.faceSelector->selectedFace()->vertices[0].normal.z);
-			glutils::Face rotatedFace = scene.faceSelector->selectedFace()->rotate(-rot_y, glm::vec3(0, 1, 0));
-			float d1 = rotatedFace.bbox.sx() * 0.5f / tanf(camera.fovy * M_PI / 180.0f * 0.5f);
-			float d2 = rotatedFace.bbox.sy() * 0.5f / tanf(camera.fovy * M_PI / 180.0f * 0.5f);
-			float d = std::max(d1, d2) * 1.5f;
-
-			// turn the camera such that the selected face becomes parallel to the image plane.
-			intCamera = InterpolationCamera(camera, 0, -rot_y / M_PI * 180, 0, glm::vec3(rotatedFace.bbox.center().x, rotatedFace.bbox.center().y, rotatedFace.bbox.maxPt.z + d));
-
-			scene.faceSelector->selectedFace()->select();
+			selectFaceForFacade();
 			return true;
 		}
 		else if (face->name.compare(0, 5, "Floor") == 0) {
 			stage = "floor";
 			scene.faceSelector->selectFace(object_id, face);
 
-			// compute appropriate camera distance for the selected face
-			float rot_y = atan2f(scene.faceSelector->selectedFace()->vertices[0].normal.x, scene.faceSelector->selectedFace()->vertices[0].normal.z);
-			glutils::Face rotatedFace = scene.faceSelector->selectedFace()->rotate(-rot_y, glm::vec3(0, 1, 0));
-			float d1 = rotatedFace.bbox.sx() * 0.5f / tanf(camera.fovy * M_PI / 180.0f * 0.5f);
-			float d2 = rotatedFace.bbox.sy() * 0.5f / tanf(camera.fovy * M_PI / 180.0f * 0.5f);
-			float d = std::max(d1, d2) * 1.5f;
-
-			// turn the camera such that the selected face becomes parallel to the image plane.
-			intCamera = InterpolationCamera(camera, 0, -rot_y / M_PI * 180, 0, glm::vec3(rotatedFace.bbox.center().x, rotatedFace.bbox.center().y, rotatedFace.bbox.maxPt.z + d));
-
-			scene.faceSelector->selectedFace()->select();
+			selectFaceForFloor();
 			return true;
 		}
 		else if (face->name.compare(0, 6, "Window") == 0) {
 			stage = "window";
 			scene.faceSelector->selectFace(object_id, face);
 
-			// compute appropriate camera distance for the selected face
-			float rot_y = atan2f(scene.faceSelector->selectedFace()->vertices[0].normal.x, scene.faceSelector->selectedFace()->vertices[0].normal.z);
-			glutils::Face rotatedFace = scene.faceSelector->selectedFace()->rotate(-rot_y, glm::vec3(0, 1, 0));
-			float d1 = rotatedFace.bbox.sx() * 0.5f / tanf(camera.fovy * M_PI / 180.0f * 0.5f);
-			float d2 = rotatedFace.bbox.sy() * 0.5f / tanf(camera.fovy * M_PI / 180.0f * 0.5f);
-			float d = std::max(d1, d2) * 1.5f;
-
-			// turn the camera such that the selected face becomes parallel to the image plane.
-			intCamera = InterpolationCamera(camera, 0, -rot_y / M_PI * 180, 0, glm::vec3(rotatedFace.bbox.center().x, rotatedFace.bbox.center().y, rotatedFace.bbox.maxPt.z + d));
-
-			scene.faceSelector->selectedFace()->select();
+			selectFaceForWindow();
 			return true;
 		}
 		else if (face->name.compare(0, 5, "Ledge") == 0) {
 			stage = "ledge";
 			scene.faceSelector->selectFace(object_id, face);
 
-			// compute appropriate camera distance for the selected face
-			float rot_y = -M_PI * 0.4 + atan2f(scene.faceSelector->selectedFace()->vertices[0].normal.x, scene.faceSelector->selectedFace()->vertices[0].normal.z);
-			glutils::Face rotatedFace = scene.faceSelector->selectedFace()->rotate(-rot_y, glm::vec3(0, 1, 0));
-			float d1 = rotatedFace.bbox.sx() * 0.5f / tanf(camera.fovy * M_PI / 180.0f * 0.5f);
-			float d2 = rotatedFace.bbox.sy() * 0.5f / tanf(camera.fovy * M_PI / 180.0f * 0.5f);
-			float d = std::max(d1, d2) * 1.5f;
-
-			// turn the camera such that the selected face becomes parallel to the image plane.
-			intCamera = InterpolationCamera(camera, 0, -rot_y / M_PI * 180, 0, glm::vec3(rotatedFace.bbox.center().x, rotatedFace.bbox.center().y, rotatedFace.bbox.maxPt.z + d));
-
-			scene.faceSelector->selectedFace()->select();
+			selectFaceForLedge();
 			return true;
 		}
 	}
 
 	return false;
+}
+
+void GLWidget3D::selectFaceForBuilding() {
+	// shift the camera such that the selected face becomes a ground plane.
+	intCamera = InterpolationCamera(camera, 30, -45, 0, computeDownwardedCameraPos(scene.faceSelector->selectedFace()->vertices[0].position.y + CAMERA_DEFAULT_HEIGHT, CAMERA_DEFAULT_DEPTH, intCamera.camera_end.xrot));
+	current_z = scene.faceSelector->selectedFace()->vertices[0].position.y;
+
+	scene.faceSelector->selectedFace()->select();
+}
+
+void GLWidget3D::selectFaceForRoof() {
+	// make the yrot in the rage [-180,179]
+	camera.yrot = (int)(camera.yrot + 360 * 10) % 360;
+	if (camera.yrot > 180) camera.yrot -= 360;
+
+	// find the nearest quadrant
+	float yrot = 0.0f;
+	if (camera.yrot >= -90 && camera.yrot <= 0) {
+		yrot = -45.0f;
+	}
+	else if (camera.yrot > 0 && camera.yrot <= 90) {
+		yrot = 45.0f;
+	}
+	else if (camera.yrot > 90) {
+		yrot = 135.0f;
+	}
+	else {
+		yrot = -135.0f;
+	}
+
+	// shift the camera such that the selected face lies at the center of the ground plane.
+	glm::vec3 center = scene.faceSelector->selectedFace()->bbox.center();
+	intCamera = InterpolationCamera(camera, 30, yrot, 0.0, glm::vec3(center.x, center.y, center.z + CAMERA_DEFAULT_DEPTH));
+	current_z = scene.faceSelector->selectedFace()->vertices[0].position.y;
+
+	scene.faceSelector->selectedFace()->select();
+}
+
+void GLWidget3D::selectFaceForFacade() {
+	// compute appropriate camera distance for the selected face
+	float rot_y = atan2f(scene.faceSelector->selectedFace()->vertices[0].normal.x, scene.faceSelector->selectedFace()->vertices[0].normal.z);
+	glutils::Face rotatedFace = scene.faceSelector->selectedFace()->rotate(-rot_y, glm::vec3(0, 1, 0));
+	float d1 = rotatedFace.bbox.sx() * 0.5f / tanf(camera.fovy * M_PI / 180.0f * 0.5f);
+	float d2 = rotatedFace.bbox.sy() * 0.5f / tanf(camera.fovy * M_PI / 180.0f * 0.5f);
+	float d = std::max(d1, d2) * 1.5f;
+
+	// turn the camera such that the selected face becomes parallel to the image plane.
+	intCamera = InterpolationCamera(camera, 0, -rot_y / M_PI * 180, 0, glm::vec3(rotatedFace.bbox.center().x, rotatedFace.bbox.center().y, rotatedFace.bbox.maxPt.z + d));
+
+	scene.faceSelector->selectedFace()->select();
+}
+
+void GLWidget3D::selectFaceForFloor() {
+	// compute appropriate camera distance for the selected face
+	float rot_y = atan2f(scene.faceSelector->selectedFace()->vertices[0].normal.x, scene.faceSelector->selectedFace()->vertices[0].normal.z);
+	glutils::Face rotatedFace = scene.faceSelector->selectedFace()->rotate(-rot_y, glm::vec3(0, 1, 0));
+	float d1 = rotatedFace.bbox.sx() * 0.5f / tanf(camera.fovy * M_PI / 180.0f * 0.5f);
+	float d2 = rotatedFace.bbox.sy() * 0.5f / tanf(camera.fovy * M_PI / 180.0f * 0.5f);
+	float d = std::max(d1, d2) * 1.5f;
+
+	// turn the camera such that the selected face becomes parallel to the image plane.
+	intCamera = InterpolationCamera(camera, 0, -rot_y / M_PI * 180, 0, glm::vec3(rotatedFace.bbox.center().x, rotatedFace.bbox.center().y, rotatedFace.bbox.maxPt.z + d));
+
+	scene.faceSelector->selectedFace()->select();
+}
+
+void GLWidget3D::selectFaceForWindow() {
+	// compute appropriate camera distance for the selected face
+	float rot_y = atan2f(scene.faceSelector->selectedFace()->vertices[0].normal.x, scene.faceSelector->selectedFace()->vertices[0].normal.z);
+	glutils::Face rotatedFace = scene.faceSelector->selectedFace()->rotate(-rot_y, glm::vec3(0, 1, 0));
+	//float d1 = rotatedFace.bbox.sx() * 0.5f / tanf(camera.fovy * M_PI / 180.0f * 0.5f);
+	float d2 = rotatedFace.bbox.sy() * 0.5f / tanf(camera.fovy * M_PI / 180.0f * 0.5f);
+	//float d = std::max(d1, d2) * 1.5f;
+	float d = d2 * 3.5f;
+
+	// turn the camera such that the selected face becomes parallel to the image plane.
+	intCamera = InterpolationCamera(camera, 0, -rot_y / M_PI * 180, 0, glm::vec3(rotatedFace.bbox.center().x, rotatedFace.bbox.center().y, rotatedFace.bbox.maxPt.z + d));
+
+	scene.faceSelector->selectedFace()->select();
+}
+
+void GLWidget3D::selectFaceForLedge() {
+	// compute appropriate camera distance for the selected face
+	float rot_y = -M_PI * 0.4 + atan2f(scene.faceSelector->selectedFace()->vertices[0].normal.x, scene.faceSelector->selectedFace()->vertices[0].normal.z);
+	glutils::Face rotatedFace = scene.faceSelector->selectedFace()->rotate(-rot_y, glm::vec3(0, 1, 0));
+	float d1 = rotatedFace.bbox.sx() * 0.5f / tanf(camera.fovy * M_PI / 180.0f * 0.5f);
+	float d2 = rotatedFace.bbox.sy() * 0.5f / tanf(camera.fovy * M_PI / 180.0f * 0.5f);
+	float d = std::max(d1, d2) * 1.5f;
+
+	// turn the camera such that the selected face becomes parallel to the image plane.
+	intCamera = InterpolationCamera(camera, 0, -rot_y / M_PI * 180, 0, glm::vec3(rotatedFace.bbox.center().x, rotatedFace.bbox.center().y, rotatedFace.bbox.maxPt.z + d));
+
+	scene.faceSelector->selectedFace()->select();
 }
 
 bool GLWidget3D::selectBuilding(const glm::vec2& mouse_pos) {
