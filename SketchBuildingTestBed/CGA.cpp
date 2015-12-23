@@ -149,7 +149,12 @@ void CGA::derive(const std::map<std::string, Grammar>& grammars, const std::map<
  */
 void CGA::generateGeometry(std::vector<boost::shared_ptr<glutils::Face> >& faces) {
 	for (int i = 0; i < shapes.size(); ++i) {
-		shapes[i]->generateGeometry(faces, 1.0f);
+		if (shapes[i]->_axiom) {
+			shapes[i]->generateGeometry(faces, 0.0f);
+		}
+		else {
+			shapes[i]->generateGeometry(faces, 1.0f);
+		}
 	}
 }
 
