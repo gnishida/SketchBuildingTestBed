@@ -425,8 +425,11 @@ void GLWidget3D::predictBuilding(int grammar_id) {
 	// set height
 	std::vector<std::pair<float, float> > ranges = cga::CGA::getParamRanges(grammars["building"][grammar_id]);
 	scene.currentObject().setHeight((ranges[0].second - ranges[0].first) * params[0] + ranges[0].first);
-	
 	generateGeometry();
+
+	// updte the grammar window
+	mainWin->grammarDialog->updateGrammar();
+
 	update();
 }
 
@@ -453,8 +456,11 @@ void GLWidget3D::predictRoof(int grammar_id) {
 
 	// set parameter values
 	scene.currentObject().setGrammar(scene.faceSelector->selectedFaceName(), grammars["roof"][grammar_id]);
-
 	generateGeometry();
+
+	// updte the grammar window
+	mainWin->grammarDialog->updateGrammar();
+
 	update();
 }
 
@@ -468,6 +474,9 @@ void GLWidget3D::predictFacade(int grammar_id, const std::vector<float>& params)
 	scene.currentObject().setGrammar(scene.faceSelector->selectedFaceName(), grammars["facade"][grammar_id], params, false);
 	generateGeometry();
 
+	// updte the grammar window
+	mainWin->grammarDialog->updateGrammar();
+
 	update();
 }
 
@@ -480,6 +489,9 @@ void GLWidget3D::predictFloor(int grammar_id, const std::vector<float>& params) 
 	// set grammar
 	scene.currentObject().setGrammar(scene.faceSelector->selectedFaceName(), grammars["floor"][grammar_id], params, false);
 	generateGeometry();
+
+	// updte the grammar window
+	mainWin->grammarDialog->updateGrammar();
 
 	update();
 }
@@ -505,8 +517,11 @@ void GLWidget3D::predictWindow(int grammar_id) {
 
 	// set parameter values
 	scene.currentObject().setGrammar(scene.faceSelector->selectedFaceName(), grammars["window"][grammar_id]);
-
 	generateGeometry();
+
+	// updte the grammar window
+	mainWin->grammarDialog->updateGrammar();
+
 	update();
 }
 
@@ -531,8 +546,11 @@ void GLWidget3D::predictLedge(int grammar_id) {
 
 	// set parameter values
 	scene.currentObject().setGrammar(scene.faceSelector->selectedFaceName(), grammars["ledge"][grammar_id]);
-
 	generateGeometry();
+
+	// updte the grammar window
+	mainWin->grammarDialog->updateGrammar();
+
 	update();
 }
 
