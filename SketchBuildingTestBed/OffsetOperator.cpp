@@ -4,12 +4,12 @@
 
 namespace cga {
 
-	OffsetOperator::OffsetOperator(const std::string& offsetDistance, const std::string& inside, const std::string& border) {
+OffsetOperator::OffsetOperator(const std::string& offsetDistance, const std::string& inside, const std::string& border) {
 	this->name = "offset";
 	this->offsetDistance = offsetDistance;
 	this->inside = inside;
 	this->border = border;
-	}
+}
 
 boost::shared_ptr<Shape> OffsetOperator::apply(boost::shared_ptr<Shape>& shape, const Grammar& grammar,  std::list<boost::shared_ptr<Shape> >& stack) {
 	float actual_offsetDistancet = grammar.evalFloat(offsetDistance, shape);
@@ -19,6 +19,25 @@ boost::shared_ptr<Shape> OffsetOperator::apply(boost::shared_ptr<Shape>& shape, 
 	stack.insert(stack.end(), shapes.begin(), shapes.end());
 
 	return boost::shared_ptr<Shape>();
+}
+
+std::string OffsetOperator::to_string() {
+	std::string ret = "offset(" + offsetDistance + ") { ";
+
+	if (!inside.empty() && !border.empty()) {
+		ret += "inside: " + inside + " | border: " + border + " }";
+	}
+	else if (!inside.empty()) {
+		ret += "inside: " + inside + " }";
+	}
+	else if (!border.empty()) {
+		ret += "border: " + border + " }";
+	}
+	else {
+		ret += "}";
+	}
+
+	return ret;
 }
 
 }
