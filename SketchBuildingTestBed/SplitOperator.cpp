@@ -64,8 +64,12 @@ std::string SplitOperator::to_string() {
 		else {
 			ret += "~" + sizes[k].value;
 		}
-
+		
 		ret += " : " + output_names[k];
+
+		if (sizes[k].repeat) {
+			ret += "*";
+		}
 	}
 	ret += " }";
 	
