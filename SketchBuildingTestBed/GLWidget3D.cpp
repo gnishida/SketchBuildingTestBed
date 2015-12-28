@@ -184,11 +184,21 @@ void GLWidget3D::loadCGA(char* filename) {
 void GLWidget3D::generateGeometry() {
 	scene.generateGeometry(&renderManager, stage);
 
+	// add a ground plane
+	std::vector<Vertex> vertices;
+	glutils::drawGrid(100, 100, 2.5, glm::vec4(0.521, 0.815, 0.917, 1), glm::vec4(0.898, 0.933, 0.941, 1), scene.system.modelMat, vertices);
+	renderManager.addObject("grid", "", vertices, false);
+
 	renderManager.updateShadowMap(this, light_dir, light_mvpMatrix);
 }
 
 void GLWidget3D::updateGeometry() {
 	scene.updateGeometry(&renderManager, stage);
+
+	// add a ground plane
+	std::vector<Vertex> vertices;
+	glutils::drawGrid(100, 100, 2.5, glm::vec4(0.521, 0.815, 0.917, 1), glm::vec4(0.898, 0.933, 0.941, 1), scene.system.modelMat, vertices);
+	renderManager.addObject("grid", "", vertices, false);
 }
 
 void GLWidget3D::selectOption(int option_index) {
@@ -387,15 +397,15 @@ void GLWidget3D::predictBuilding(int grammar_id) {
 
 	// optimize the parameter values by MCMC
 	start = clock();
-	mcmc->optimize(grammars["building"][grammar_id], img, 10.0f, 20, current_z, params);
+	mcmc->optimize(grammars["building"][grammar_id], img, 10.0f, 10, current_z, params);
 	debug("Building MCMC: ", params);
 	end = clock();
 	std::cout << "Duration of MCMC: " << (double)(end - start) / CLOCKS_PER_SEC << "sec." << std::endl;
 
-	float offset_x = params[0] * 24 - 12;
-	float offset_y = params[1] * 24 - 12;
-	float object_width = params[2] * 24 + 4;
-	float object_depth = params[3] * 24 + 4;
+	float offset_x = params[0] * (BUILDING_MASS_MAX_X - BUILDING_MASS_MIN_X) + BUILDING_MASS_MIN_X;
+	float offset_y = params[1] * (BUILDING_MASS_MAX_Y - BUILDING_MASS_MIN_Y) + BUILDING_MASS_MIN_Y;
+	float object_width = params[2] * (BUILDING_MASS_MAX_WIDTH - BUILDING_MASS_MIN_WIDTH) + BUILDING_MASS_MIN_WIDTH;
+	float object_depth = params[3] * (BUILDING_MASS_MAX_DEPTH - BUILDING_MASS_MIN_DEPTH) + BUILDING_MASS_MIN_DEPTH;
 
 	// HACK: for observatory
 	if (grammar_id == 3) {
@@ -1065,10 +1075,10 @@ void GLWidget3D::mouseReleaseEvent(QMouseEvent* e) {
 		}
 		else if (e->button() == Qt::LeftButton) {
 			if (stage == "building") {
-				if (strokes.size() > 3) updateBuildingOptions();
+				if (strokes.size() >= 3) updateBuildingOptions();
 			}
 			else if (stage == "roof") {
-				if (strokes.size() > 3) updateRoofOptions();
+				if (strokes.size() >= 2) updateRoofOptions();
 			}
 			else if (stage == "facade") {
 				updateFacadeOptions();
@@ -1077,7 +1087,7 @@ void GLWidget3D::mouseReleaseEvent(QMouseEvent* e) {
 				updateFloorOptions();
 			}
 			else if (stage == "window") {
-				if (strokes.size() > 3) updateWindowOptions();
+				if (strokes.size() >= 2) updateWindowOptions();
 			}
 			else if (stage == "ledge") {
 				updateLedgeOptions();
@@ -1094,7 +1104,7 @@ void GLWidget3D::mouseMoveEvent(QMouseEvent* e) {
 	// Tablet emits the mouseMoveEvent even if the pen touches the screen for a very short time.
 	// Thus, if the elapsed time is too short, skip this event.
 	time_t time = clock();
-	if (time - mouse_pressed_time < 100) return;
+	if (time - mouse_pressed_time < 50) return;
 
 	if (dragging) {
 		if (mode == MODE_CAMERA) {
@@ -1220,11 +1230,11 @@ void GLWidget3D::initializeGL() {
 	camera.zrot = 0.0f;
 	camera.pos = computeDownwardedCameraPos(CAMERA_DEFAULT_HEIGHT, CAMERA_DEFAULT_DEPTH, camera.xrot);
 	current_z = 0.0f;
-	scene.updateGeometry(&renderManager, "building");
-	renderManager.updateShadowMap(this, light_dir, light_mvpMatrix);
 
 	//changeStage("building");
 	stage = "building";
+
+	generateGeometry();
 
 	setMouseTracking(true);
 }
@@ -1242,6 +1252,8 @@ void GLWidget3D::resizeGL(int width, int height) {
 	QImage newImage(width, height, QImage::Format_RGB888);
 	newImage.fill(qRgba(255, 255, 255, 255));
 	sketch = newImage;
+
+	renderManager.updateShadowMap(this, light_dir, light_mvpMatrix);
 }
 
 void GLWidget3D::paintEvent(QPaintEvent* e) {
