@@ -188,7 +188,7 @@ void GLWidget3D::generateGeometry() {
 	// add a ground plane
 	if (showGroundPlane) {
 		std::vector<Vertex> vertices;
-		glutils::drawGrid(100, 100, 2.5, glm::vec4(0.521, 0.815, 0.917, 1), glm::vec4(0.898, 0.933, 0.941, 1), scene.system.modelMat, vertices);
+		glutils::drawGrid(50, 50, 2.5, glm::vec4(0.521, 0.815, 0.917, 1), glm::vec4(0.898, 0.933, 0.941, 1), scene.system.modelMat, vertices);
 		renderManager.addObject("grid", "", vertices, false);
 	}
 
@@ -201,7 +201,7 @@ void GLWidget3D::updateGeometry() {
 	// add a ground plane
 	if (showGroundPlane) {
 		std::vector<Vertex> vertices;
-		glutils::drawGrid(100, 100, 2.5, glm::vec4(0.521, 0.815, 0.917, 1), glm::vec4(0.898, 0.933, 0.941, 1), scene.system.modelMat, vertices);
+		glutils::drawGrid(50, 50, 2.5, glm::vec4(0.521, 0.815, 0.917, 1), glm::vec4(0.898, 0.933, 0.941, 1), scene.system.modelMat, vertices);
 		renderManager.addObject("grid", "", vertices, false);
 	}
 }
