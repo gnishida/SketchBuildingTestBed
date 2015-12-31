@@ -783,12 +783,10 @@ void GLWidget3D::selectFaceForLedge() {
 	// compute appropriate camera distance for the selected face
 	float rot_y = -M_PI * 0.4 + atan2f(scene.faceSelector->selectedFace()->vertices[0].normal.x, scene.faceSelector->selectedFace()->vertices[0].normal.z);
 	glutils::Face rotatedFace = scene.faceSelector->selectedFace()->rotate(-rot_y, glm::vec3(0, 1, 0));
-	float d1 = rotatedFace.bbox.sx() * 0.5f / tanf(camera.fovy * M_PI / 180.0f * 0.5f);
-	float d2 = rotatedFace.bbox.sy() * 0.5f / tanf(camera.fovy * M_PI / 180.0f * 0.5f);
-	float d = std::max(d1, d2) * 1.5f;
+	float d = 6;
 
 	// turn the camera such that the selected face becomes parallel to the image plane.
-	intCamera = InterpolationCamera(camera, 0, -rot_y / M_PI * 180, 0, glm::vec3(rotatedFace.bbox.center().x, rotatedFace.bbox.center().y, rotatedFace.bbox.maxPt.z + d));
+	intCamera = InterpolationCamera(camera, 0, -rot_y / M_PI * 180, 0, glm::vec3(rotatedFace.bbox.center().x, rotatedFace.bbox.center().y, rotatedFace.bbox.center().z + d));
 
 	scene.faceSelector->selectedFace()->select();
 }
