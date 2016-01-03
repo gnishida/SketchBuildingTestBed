@@ -28,6 +28,23 @@
 	<rule name="RoofLedge_05">
 		<color s="#e5d2ba"/>
 	</rule>
+	<rule name="RoofWall_06">
+		<setupProjection axesSelector="scope.xy">
+			<param name="texWidth" type="absolute" value="1"/>
+			<param name="texHeight" type="absolute" value="1"/>
+		</setupProjection>
+		<texture texturePath="textures/roof_paris.png"/>
+	</rule>
+	<rule name="RoofWall_07">
+		<setupProjection axesSelector="scope.xy">
+			<param name="texWidth" type="absolute" value="1"/>
+			<param name="texHeight" type="absolute" value="1"/>
+		</setupProjection>
+		<texture texturePath="textures/roof_paris.png"/>
+	</rule>
+	<rule name="RoofSide">
+		<texture texturePath="textures/wall_paris.png"/>
+	</rule>
 	
 	<!-- wall -->
 	<rule name="Wall">
