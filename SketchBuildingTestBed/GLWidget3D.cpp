@@ -1103,7 +1103,7 @@ void GLWidget3D::mouseReleaseEvent(QMouseEvent* e) {
 				if (strokes.size() >= 3) updateBuildingOptions();
 			}
 			else if (stage == "roof") {
-				if (strokes.size() >= 2) updateRoofOptions();
+				updateRoofOptions();
 			}
 			else if (stage == "facade") {
 				updateFacadeOptions();
@@ -1112,7 +1112,7 @@ void GLWidget3D::mouseReleaseEvent(QMouseEvent* e) {
 				updateFloorOptions();
 			}
 			else if (stage == "window") {
-				if (strokes.size() >= 2) updateWindowOptions();
+				updateWindowOptions();
 			}
 			else if (stage == "ledge") {
 				updateLedgeOptions();
