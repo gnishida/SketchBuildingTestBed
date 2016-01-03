@@ -267,6 +267,7 @@
     <ClCompile Include="InsertOperator.cpp" />
     <ClCompile Include="LShape.cpp" />
     <ClCompile Include="LShapePrism.cpp" />
+    <ClCompile Include="LShapeTaper.cpp" />
     <ClCompile Include="MCMC.cpp" />
     <ClCompile Include="NumberEval.cpp" />
     <ClCompile Include="OBJLoader.cpp" />
@@ -286,6 +287,7 @@
     </ClCompile>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainWindow.cpp" />
+    <ClCompile Include="RectangleTaper.cpp" />
     <ClCompile Include="RenderManager.cpp" />
     <ClCompile Include="RoofGableOperator.cpp" />
     <ClCompile Include="RoofHipOperator.cpp" />
@@ -307,6 +309,7 @@
     <ClCompile Include="TranslateOperator.cpp" />
     <ClCompile Include="UShape.cpp" />
     <ClCompile Include="UShapePrism.cpp" />
+    <ClCompile Include="UShapeTaper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="MainWindow.h">
@@ -434,6 +437,7 @@
     <ClInclude Include="LayoutExtractor.h" />
     <ClInclude Include="LShape.h" />
     <ClInclude Include="LShapePrism.h" />
+    <ClInclude Include="LShapeTaper.h" />
     <ClInclude Include="MCMC.h" />
     <ClInclude Include="NumberEval.h" />
     <ClInclude Include="OBJLoader.h" />
@@ -442,6 +446,7 @@
     <ClInclude Include="Pyramid.h" />
     <ClInclude Include="PyramidOperator.h" />
     <ClInclude Include="Rectangle.h" />
+    <ClInclude Include="RectangleTaper.h" />
     <ClInclude Include="RenderManager.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="RoofGableOperator.h" />
@@ -481,6 +486,7 @@
     <ClInclude Include="TranslateOperator.h" />
     <ClInclude Include="UShape.h" />
     <ClInclude Include="UShapePrism.h" />
+    <ClInclude Include="UShapeTaper.h" />
     <ClInclude Include="Vertex.h" />
     <ClInclude Include="CenterOperator.h" />
     <ClInclude Include="ColorOperator.h" />
