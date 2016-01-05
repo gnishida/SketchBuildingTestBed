@@ -195,6 +195,19 @@ void GLWidget3D::generateGeometry() {
 	renderManager.updateShadowMap(this, light_dir, light_mvpMatrix);
 }
 
+void GLWidget3D::generateGeometry(int selectedBuilding) {
+	scene.generateGeometry(&renderManager, stage, selectedBuilding);
+
+	// add a ground plane
+	if (showGroundPlane) {
+		std::vector<Vertex> vertices;
+		glutils::drawGrid(50, 50, 2.5, glm::vec4(0.521, 0.815, 0.917, 1), glm::vec4(0.898, 0.933, 0.941, 1), scene.system.modelMat, vertices);
+		renderManager.addObject("grid", "", vertices, false);
+	}
+
+	renderManager.updateShadowMap(this, light_dir, light_mvpMatrix);
+}
+
 void GLWidget3D::updateGeometry() {
 	scene.updateGeometry(&renderManager, stage);
 
@@ -414,7 +427,7 @@ void GLWidget3D::predictBuilding(int grammar_id) {
 	float object_width = params[2] * (BUILDING_MASS_MAX_WIDTH - BUILDING_MASS_MIN_WIDTH) + BUILDING_MASS_MIN_WIDTH;
 	float object_depth = params[3] * (BUILDING_MASS_MAX_DEPTH - BUILDING_MASS_MIN_DEPTH) + BUILDING_MASS_MIN_DEPTH;
 
-	// HACK: for observatory
+	// HACK: for observatory, make a circle instead of oval
 	if (grammar_id == 3) {
 		float avg_width_depth = (object_width + object_depth) * 0.5f;
 		object_width = avg_width_depth;
@@ -1008,6 +1021,7 @@ void GLWidget3D::tabletEvent(QTabletEvent *e) {
 void GLWidget3D::mousePressEvent(QMouseEvent* e) {
 	dragging = true;
 	mouse_pressed_time = clock();
+	mouse_moved_time = clock();
 
 	if (mode == MODE_CAMERA) { // move camera
 		camera.mousePress(e->x(), e->y());
@@ -1069,7 +1083,7 @@ void GLWidget3D::mouseReleaseEvent(QMouseEvent* e) {
 				scene.buildingSelector->alignObjects(align_threshold);
 			}
 			scene.buildingSelector->unselectBuildingControlPoint();
-			generateGeometry();
+			generateGeometry(scene.buildingSelector->selectedBuilding());
 		}
 		else {
 			if (selectBuilding(glm::vec2(e->x(), e->y()))) {
@@ -1148,13 +1162,15 @@ void GLWidget3D::mouseMoveEvent(QMouseEvent* e) {
 			// do nothing
 		}
 		else if (mode == MODE_SELECT_BUILDING) {
+			if (time - mouse_moved_time < 10) return;
+			mouse_moved_time = time;
 			if (scene.buildingSelector->isBuildingControlPointSelected()) {
 				// resize the building
 				scene.buildingSelector->resize(glm::vec2(e->x(), e->y()), !ctrlPressed, altPressed);
 				if (shiftPressed) {
 					scene.buildingSelector->alignObjects(align_threshold);
 				}
-				generateGeometry();
+				generateGeometry(scene.buildingSelector->selectedBuilding());
 			}
 		}
 		else {

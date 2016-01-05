@@ -64,6 +64,7 @@ public:
 	int mode;
 	float align_threshold;
 	time_t mouse_pressed_time;
+	time_t mouse_moved_time;
 	//std::vector<Regression*> regressions;
 	MCMC* mcmc;
 	std::map<std::string, std::vector<QImage> > grammarImages;
@@ -91,6 +92,7 @@ public:
 	void drawScene();
 	void loadCGA(char* filename);
 	void generateGeometry();
+	void generateGeometry(int selectedBuilding);
 	void updateGeometry();
 	void selectOption(int option_index);
 
