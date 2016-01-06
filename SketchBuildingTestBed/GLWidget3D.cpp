@@ -222,6 +222,9 @@ void GLWidget3D::updateGeometry() {
 }
 
 void GLWidget3D::selectOption(int option_index) {
+	userStatistics.numNonBestSelected++;
+	mainWin->ui.statusBar->showMessage(userStatistics.to_string().c_str());
+
 	if (stage == "building") {
 		predictBuilding(option_index);
 	}
@@ -1029,9 +1032,13 @@ void GLWidget3D::mousePressEvent(QMouseEvent* e) {
 		camera.mousePress(e->x(), e->y());
 	}
 	else if (mode == MODE_SELECT) {
+		userStatistics.numClicks++;
+		mainWin->ui.statusBar->showMessage(userStatistics.to_string().c_str());
 		// do nothing
 	}
 	else if (mode == MODE_SELECT_BUILDING) {
+		userStatistics.numClicks++;
+		mainWin->ui.statusBar->showMessage(userStatistics.to_string().c_str());
 		if (selectBuildingControlPoint(glm::vec2(e->x(), e->y()))) {
 			// a building is selected, so update the history to prepare for undo in the future
 			scene.updateHistory();
@@ -1042,6 +1049,8 @@ void GLWidget3D::mousePressEvent(QMouseEvent* e) {
 		update();
 	}
 	else {
+		userStatistics.numClicks++;
+		mainWin->ui.statusBar->showMessage(userStatistics.to_string().c_str());
 		if (e->buttons() & Qt::RightButton) {
 			// start drawing a lasso
 			lastPos = e->pos();
