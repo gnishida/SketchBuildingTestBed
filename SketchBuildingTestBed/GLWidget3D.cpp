@@ -788,7 +788,8 @@ void GLWidget3D::selectFaceForWindow() {
 	//float d1 = rotatedFace.bbox.sx() * 0.5f / tanf(camera.fovy * M_PI / 180.0f * 0.5f);
 	float d2 = rotatedFace.bbox.sy() * 0.5f / tanf(camera.fovy * M_PI / 180.0f * 0.5f);
 	//float d = std::max(d1, d2) * 1.5f;
-	float d = d2 * 3.5f;
+	//float d = d2 * 3.5f;
+	float d = 10.0f;
 
 	// turn the camera such that the selected face becomes parallel to the image plane.
 	intCamera = InterpolationCamera(camera, 0, -rot_y / M_PI * 180, 0, glm::vec3(rotatedFace.bbox.center().x, rotatedFace.bbox.center().y, rotatedFace.bbox.maxPt.z + d));
