@@ -737,7 +737,7 @@ bool GLWidget3D::selectStageAndFace(const glm::vec2& mouse_pos) {
 
 void GLWidget3D::selectFaceForBuilding() {
 	// shift the camera such that the selected face becomes a ground plane.
-	intCamera = InterpolationCamera(camera, 30, -45, 0, computeDownwardedCameraPos(scene.faceSelector->selectedFace()->vertices[0].position.y + CAMERA_DEFAULT_HEIGHT, CAMERA_DEFAULT_DEPTH, intCamera.camera_end.xrot));
+	intCamera = InterpolationCamera(camera, 30, -45, 0, computeDownwardedCameraPos(scene.faceSelector->selectedFace()->vertices[0].position.y + CAMERA_DEFAULT_HEIGHT, CAMERA_DEFAULT_DEPTH, 30.0f));
 	current_z = scene.faceSelector->selectedFace()->vertices[0].position.y;
 
 	scene.faceSelector->selectedFace()->select();
