@@ -764,8 +764,13 @@ void GLWidget3D::selectFaceForRoof() {
 	}
 
 	// shift the camera such that the selected face lies at the center of the ground plane.
+	float xrot = 30.0f;
 	glm::vec3 center = scene.faceSelector->selectedFace()->bbox.center();
-	intCamera = InterpolationCamera(camera, 30, yrot, 0.0, glm::vec3(center.x, center.y, center.z + CAMERA_DEFAULT_DEPTH));
+	float K = center.x * sinf(-yrot / 180.0f * M_PI) + center.z * cosf(-yrot / 180.0f * M_PI);
+	float dx = center.x * cosf(-yrot / 180.0f * M_PI) - center.z * sinf(-yrot / 180.0f * M_PI);
+	float dy = center.y * cosf(xrot / 180.0f * M_PI) - K * sinf(xrot / 180.0f * M_PI);
+	float dz = K * cosf(xrot / 180.0f * M_PI) + center.y * sinf(xrot / 180.0f * M_PI);
+	intCamera = InterpolationCamera(camera, xrot, yrot, 0.0, glm::vec3(dx, dy, dz + CAMERA_DEFAULT_DEPTH));
 	current_z = scene.faceSelector->selectedFace()->vertices[0].position.y;
 
 	scene.faceSelector->selectedFace()->select();
