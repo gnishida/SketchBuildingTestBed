@@ -505,8 +505,20 @@ void GLWidget3D::predictRoof(int grammar_id) {
 	time_t end = clock();
 	std::cout << "Duration of regression: " << (double)(end - start) / CLOCKS_PER_SEC << "sec." << std::endl;
 
+	std::vector<float> params(5);
+	for (int i = 0; i < params.size(); ++i) {
+		params[i] = 0.5f;
+	}
+
+	// optimize the parameter values by MCMC
+	start = clock();
+	mcmc->optimizeRoof(grammars["roof"][grammar_id], scene.faceSelector->_selectedFaceShape, img, 10.0f, 10, params);
+	debug("Roof MCMC: ", params);
+	end = clock();
+	std::cout << "Duration of MCMC: " << (double)(end - start) / CLOCKS_PER_SEC << "sec." << std::endl;
+
 	// set parameter values
-	scene.currentObject().setGrammar(scene.faceSelector->selectedFaceName(), grammars["roof"][grammar_id]);
+	scene.currentObject().setGrammar(scene.faceSelector->selectedFaceName(), grammars["roof"][grammar_id], params, true);
 	generateGeometry();
 
 	// updte the grammar window
