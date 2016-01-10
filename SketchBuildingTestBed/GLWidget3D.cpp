@@ -492,8 +492,6 @@ void GLWidget3D::predictRoof(int grammar_id) {
 		return;
 	}
 
-	std::cout << "Roof: grammar " << (grammar_id + 1) << " was selected." << std::endl;
-
 	renderManager.removeObjects();
 
 	time_t start = clock();
