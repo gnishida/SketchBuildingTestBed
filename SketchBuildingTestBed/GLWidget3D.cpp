@@ -827,7 +827,6 @@ void GLWidget3D::selectFaceForLedge() {
 	float dy = center.y;
 	float dz = D;
 
-	//glutils::Face rotatedFace = scene.faceSelector->selectedFace()->rotate(-rot_y, glm::vec3(0, 1, 0));
 	float d = 6;
 
 	// turn the camera such that the selected face becomes parallel to the image plane.
