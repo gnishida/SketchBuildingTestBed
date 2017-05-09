@@ -564,7 +564,4 @@
       <Filter>Source Files\shader</Filter>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="SketchBuildingTestBed.rc" />
-  </ItemGroup>
 </Project>

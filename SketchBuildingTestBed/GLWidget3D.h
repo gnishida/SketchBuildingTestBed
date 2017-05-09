@@ -154,6 +154,7 @@ protected:
 	void tabletEvent(QTabletEvent* e);
 	void mousePressEvent(QMouseEvent* e);
 	void mouseMoveEvent(QMouseEvent * e);
+	void wheelEvent(QWheelEvent* e);
 	void mouseReleaseEvent(QMouseEvent* e);
 	void initializeGL();
 	void resizeGL(int width, int height);

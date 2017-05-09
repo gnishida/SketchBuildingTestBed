@@ -440,7 +440,7 @@ void GLWidget3D::predictBuilding(int grammar_id) {
 
 	// optimize the parameter values by MCMC
 	start = clock();
-	mcmc->optimize(grammars["building"][grammar_id], img, 10.0f, 10, current_z, params);
+	mcmc->optimize(grammars["building"][grammar_id], img, 10.0f, 4, current_z, params);
 	debug("Building MCMC: ", params);
 	end = clock();
 	std::cout << "Duration of MCMC: " << (double)(end - start) / CLOCKS_PER_SEC << "sec." << std::endl;
@@ -512,7 +512,7 @@ void GLWidget3D::predictRoof(int grammar_id) {
 
 	// optimize the parameter values by MCMC
 	start = clock();
-	mcmc->optimizeRoof(grammars["roof"][grammar_id], scene.faceSelector->_selectedFaceShape, img, 10.0f, 10, params);
+	mcmc->optimizeRoof(grammars["roof"][grammar_id], scene.faceSelector->_selectedFaceShape, img, 10.0f, 4, params);
 	debug("Roof MCMC: ", params);
 	end = clock();
 	std::cout << "Duration of MCMC: " << (double)(end - start) / CLOCKS_PER_SEC << "sec." << std::endl;
@@ -826,6 +826,7 @@ void GLWidget3D::selectFaceForWindow() {
 
 	// turn the camera such that the selected face becomes parallel to the image plane.
 	intCamera = InterpolationCamera(camera, 0, -rot_y / M_PI * 180, 0, glm::vec3(rotatedFace.bbox.center().x, rotatedFace.bbox.center().y, rotatedFace.bbox.maxPt.z + d));
+	//intCamera = InterpolationCamera(camera, 0, -rot_y / M_PI * 180, 0, glm::vec3(scene.faceSelector->selectedFace()->bbox.center().x, scene.faceSelector->selectedFace()->bbox.center().y, scene.faceSelector->selectedFace()->bbox.maxPt.z + d));
 
 	scene.faceSelector->selectedFace()->select();
 }
@@ -1032,25 +1033,36 @@ void GLWidget3D::keyPressEvent(QKeyEvent *e) {
 	shiftPressed = false;
 	altPressed = false;
 
-	switch (e->key()) {
-	case Qt::Key_Control:
+	if (e->modifiers() & Qt::ControlModifier) {
 		ctrlPressed = true;
-		break;
-	case Qt::Key_Shift:
+	}
+	if (e->modifiers() & Qt::ShiftModifier) {
 		shiftPressed = true;
-		break;
-	case Qt::Key_Alt:
+	}
+	if (e->modifiers() & Qt::AltModifier) {
 		altPressed = true;
-		break;
+	}
+
+	switch (e->key()) {
 	default:
 		break;
 	}
 }
 
 void GLWidget3D::keyReleaseEvent(QKeyEvent* e) {
-	ctrlPressed = false;
-	shiftPressed = false;
-	altPressed = false;
+	switch (e->key()) {
+	case Qt::Key_Control:
+		ctrlPressed = false;
+		break;
+	case Qt::Key_Shift:
+		shiftPressed = false;
+		break;
+	case Qt::Key_Alt:
+		altPressed = false;
+		break;
+	default:
+		break;
+	}
 }
 
 void GLWidget3D::tabletEvent(QTabletEvent *e) {
@@ -1105,6 +1117,11 @@ void GLWidget3D::mousePressEvent(QMouseEvent* e) {
 			stroke_widths.resize(stroke_widths.size() + 1);
 		}
 	}
+}
+
+void GLWidget3D::wheelEvent(QWheelEvent* e) {
+	camera.zoom(e->delta());
+	update();
 }
 
 /**
@@ -1201,14 +1218,13 @@ void GLWidget3D::mouseMoveEvent(QMouseEvent* e) {
 
 	if (dragging) {
 		if (mode == MODE_CAMERA) {
-			if (e->buttons() & Qt::RightButton) { // Zoom
-				camera.zoom(e->x(), e->y());
-			}
-			else if (e->buttons() & Qt::MidButton) { // Move
-				camera.move(e->x(), e->y());
-			}
-			else if (e->buttons() & Qt::LeftButton) { // Rotate
-				camera.rotate(e->x(), e->y());
+			if (e->buttons() & Qt::LeftButton) { // Rotate
+				if (shiftPressed) {
+					camera.move(e->x(), e->y());
+				}
+				else {
+					camera.rotate(e->x(), e->y());
+				}
 			}
 			clearSketch();
 		}
